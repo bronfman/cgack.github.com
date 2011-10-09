@@ -4,7 +4,7 @@
   <title><![CDATA[Cory Gackenheimer]]></title>
   <link href="http://cgack.github.com/atom.xml" rel="self"/>
   <link href="http://cgack.github.com/"/>
-  <updated>2011-10-09T14:42:16-04:00</updated>
+  <updated>2011-10-09T15:13:20-04:00</updated>
   <id>http://cgack.github.com/</id>
   <author>
     <name><![CDATA[Cory Gackenheimer]]></name>
@@ -12,6 +12,15 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Moving to Octopress]]></title>
+    <link href="http://cgack.github.com/blog/2011/10/09/moving-to-octopress/"/>
+    <updated>2011-10-09T15:10:00-04:00</updated>
+    <id>http://cgack.github.com/blog/2011/10/09/moving-to-octopress</id>
+    <content type="html"><![CDATA[<p>I have been toying with the idea to move away from blogger to another blogging engine.  Since I&#8217;ve been doing most of my hacking via Github I have decided to move to <a href="http://octopress.org">Octopress</a>.  I have imported all my old posts and hopefully the conversion from HTML to .Markdown hasn&#8217;t caused too much trouble.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Cloud 9 adds Heroku Support]]></title>
@@ -182,15 +191,6 @@
     <updated>2011-02-20T00:00:00-05:00</updated>
     <id>http://cgack.github.com/blog/2011/02/20/coding-in-the-cloud-part-ii</id>
     <content type="html"><![CDATA[Coding in the cloud is something I feel I need to be able to do easily now that I&#8217;m utilizing my Google Chrome OS notebook.  <a href="http://go-cloud-go.blogspot.com/2011/02/coding-in-cloud.html">Last post</a> I discussed utilizing an online development environment called CodeRun and found it to be quite useful, but it is not my favorite cloud development environment.  My favorite (so far) is called <a href="http://kodingen.com/">Kodingen</a>.<br /><br />Kodingen is &#8220;The Cloud Development Environment, Online Code Editor, Cloud Hosting, Web-based access to file system, Web-based ftp &amp; svn integration&#8221; or at least it will be all of those things.  Currently Kodingen is in Beta v3 so not all of those features are available as of this writing.  Even though this cloud development environment is not fully operational it is still fantastic.  As shown on their site, there is code support for php, perl, and python [with future support of django, ruby on rails, fastcgi,&#8230;].  The site you create is hosted on Kodingen, and they offer a default 500mb of diskspace, 1000mb of monthly traffic, 1 domain, 6 subdomains, and 5 databases by default (of course you can &#8220;get extra resources&#8221;).  So I set out to play around with Kodingen.<br /><br />Setting up an account was easy enough, so I logged in an got to work.  I quickly <a href="http://gocloudgo.kodingen.com/">created a website</a> with an HTML5 canvas star field plastered on it all from the comfort of my Cr-48.  As far as code editor selection, currently there is support for Bespin, CodeMirror, and Ymacs.  I found that CodeMirror suits my needs best, though I might have been inclined to choose Bespin (probably because of its <a href="http://starwars.wikia.com/wiki/Bespin">name</a>), but it lacks good support for copy/paste in Google Chrome.<br /><br />A couple features I have not utilized more than a simple evaluation are the database support and the image editing.  Creating a MySQL database was a snap (PostgreSQL, and SqLite support to come) so I created a simple database with a couple tables that seemed to perform well enough.  Image editing is currently supported using Pixlr (support for Aviary to come) and again seemed to perform well enough.  Kodingen also reports future support for code repositories such as svn, git, and mercurial where one can create teams to manage joint coding efforts (can&#8217;t wait to try it out).<br /><br />So after my week of trialling CodeRun and Kodingen, I must lean toward Kodingen based mostly on personal preference, but I feel that both systems create a sound cloud based development environment.  As I mentioned in the last post I think these systems would be ideal for educators wishing to introduce their students to web development or as a great code on the go environment.<div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/7333770831047956364-3314926599229429559?l=go-cloud-go.blogspot.com' alt='' /></div>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Coding in the Cloud: Part I]]></title>
-    <link href="http://cgack.github.com/blog/2011/02/18/coding-in-the-cloud-part-i/"/>
-    <updated>2011-02-18T00:00:00-05:00</updated>
-    <id>http://cgack.github.com/blog/2011/02/18/coding-in-the-cloud-part-i</id>
-    <content type="html"><![CDATA[As a web developer I feel tethered to my desktop workstation, sure I can <a href="http://go-cloud-go.blogspot.com/2011/02/to-cloud.html">work remotely</a>, but how can I code in the cloud without the need for a desktop development environment.  There are several cool tools for cloud-top development environments two of which I have been trialling recently.<br /><br /><a href="http://coderun.com/">CodeRun</a> is a development platform for three main types of applications, C#, JavaScript, and PHP.  To get started all you need to do is go to the <a href="http://coderun.com/ide/">CodeRun IDE</a> select &#8220;New&#8221; and you can choose the project template of your choice and go.  Most templates start with a clever label or button as a started, for example the jQuery UI project template starts with a &#8220;HelloWorld&#8221; dialog. <br /><br />One can also upload an existing project which I have stored elsewhere and get to work.  This could be a great alternative to remotely connecting to an office based IDE and coding through that connection.  With the CodeRun platform the user has access to debugging tools and an in browser secure &#8220;temporary sand-boxed environment&#8221; in which to run your projects.<br /><br />In my opinion a fantastic feature of this platform is the repository of <a href="http://coderun.com/code/">code samples</a>.  CodeRun allows a user to share their code, assigning it a unique URL that the user may share.  Just browsing through these projects would give a developer a great view of the power that this tool holds, or ideas for their own projects.  I could see this as a great way for educators to get students to learn programming, without a need to buy/download/install massive amounts of expensive applications.  A student could code their program and turn it in by sending their linked URL to their instructor for grading.<br /><br />So I think that CodeRun is a powerful application that is great for all levels of developers or even those with no experience coding who want to learn a new skill.  Go for it.  Happy Coding!<div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/7333770831047956364-5291915445174935409?l=go-cloud-go.blogspot.com' alt='' /></div>
 ]]></content>
   </entry>
   
