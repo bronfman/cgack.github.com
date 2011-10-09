@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Projects - Cory Gackenheimer</title>
+  <title>Duostack: Cloud Platform as a Service - Cory Gackenheimer</title>
   <meta name="author" content="Cory Gackenheimer">
 
   
-  <meta name="description" content="        Projects      Oct 9th, 2011      Canvas Drawing DemoThis Demo is a simple canvas drawing demo origianlly created for a Preschooler.  I used...">
+  <meta name="description" content="I have been using and trying many of the all-in-one solutions for web-based development on my Cr-48, but what happens when your favorite editor doe...">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://cgack.github.com/Projects/">
+  <link rel="canonical" href="http://cgack.github.com/blog/2011/05/02/duostack-cloud-platform-as-a-service/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -60,32 +60,15 @@
   <div id="main">
     <div id="content">
       <div>
-<article role="article">
+<article class="hentry" role="article">
   
   <header>
-    <h1 class="entry-title">Projects</h1>
-    <p class="meta">
-
-
-
-
-
-  
-
-
-
-<time datetime="2011-10-09T09:31:00-04:00" pubdate  data-updated="true" >Oct 9<span>th</span>, 2011</time></p>
-  </header>
-  
-  <h2>Canvas Drawing Demo</h2>
-
-<p>This Demo is a simple canvas drawing demo origianlly created for a Preschooler.  I used the History API to allow for undo [browser back OR ctrl + z] and redo [browser fwd OR ctrl + y].  It won the <a href="https://developer.mozilla.org/demos/devderby/2011/august">August Dev Derby</a>.  Check it out <a href="../draw/">here</a></p>
-
-  
-    <footer>
+    
+      <h1 class="entry-title">Duostack: Cloud Platform as a Service</h1>
+    
+    
       <p class="meta">
         
-        
 
 
 
@@ -95,22 +78,51 @@
 
 
 
-<time datetime="2011-10-09T09:31:00-04:00" pubdate  data-updated="true" >Oct 9<span>th</span>, 2011</time>
+<time datetime="2011-05-02T00:00:00-04:00" pubdate  data-updated="true" >May 2<span>nd</span>, 2011</time>
         
       </p>
+    
+  </header>
+
+
+<div class="entry-content">I have been using and trying many of the all-in-one solutions for web-based development on my Cr-48, but what happens when your favorite editor does not deploy directly to where you want your app to live (<a href="http://c9.io/">cloud9</a>)?  I tried this recently with a <a href="http://nodejs.org/">NodeJS</a> app and a cloud platform (currently in beta) called <a href="https://www.duostack.com/">Duostack</a>.  For my NodeJS app, just as everyone else toying with Node, I <strike>reinvented</strike> reworked the wheel and used Ryan Dahl&#8217;s (creator of NodeJS) basic chat application.  All I did was partition the client to act like it had multiple rooms rather than one group room as in <a href="http://chat.nodejs.org/">the original</a>.  That is not what this post is about. This post is about how easy it is to get a node instance up and running on Duostack.<br /><div><br /></div><div>Duostack is a super easy to use cloud platform as a service for Node and Ruby apps.  Databases that are available by default are MySQL, MongoDB, and Redis (the documentation states external DBs are welcome).  The deployments live on the Amazon EC2 by default, but there is &#8216;cross-cloud reliability&#8217; that will allow for fail over to the Proactive Cloud in case of a <i>possible</i> Amazon outage.  Deployment is as simple as it could get with a cloud platform (well it could get simpler, but its super easy as you can read below). </div><div><br /></div><div>To setup Duostack I had to move away from Chrome OS and into Ubuntu on my Cr-48.  I followed the <a href="http://docs.duostack.com/node/command-line-client#setup">simple steps</a> to get the command line interface installed.  I used the curl method versus the node package manager install and had my Duostack instance configured shortly thereafter.  So now to create a Duostack app.  This is even easier then setup of the command line client, simply type &#8216;duostack create &#8217; and you have it. Duostack uses Git to control deployment so deploying is also a snap, just feed the command &#8216;git push duostack master&#8217; from your git repository, wait a few seconds while Duostack works the deployment magic, and you have your Duostack application deployed.  Mine lives <a href="http://noderooms.duostack.net/">here</a>.  So far I am more than pleased with my Duostack beta access and invite anyone with interest in deploying a Node or Ruby app to a cloud platform to <a href="https://www.duostack.com/signups/new">signup</a> and give it a try.  I have a few other betas for platform as a service solutions to check out, but Duostack got first dibs by granting me beta access before the others.</div><div><br /></div><div><br /></div><div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/7333770831047956364-6022969820459559969?l=go-cloud-go.blogspot.com' alt='' /></div>
+</div>
+
+
+  <footer>
+    <p class="meta">
       
-        <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://cgack.github.com/Projects/index.html" data-via="cgack" data-counturl="http://cgack.github.com/Projects/index.html" >Tweet</a>
+
+<span class="byline author vcard">Posted by <span class="fn">Cory Gackenheimer</span></span>
+
+      
+
+
+
+
+
+  
+
+
+
+<time datetime="2011-05-02T00:00:00-04:00" pubdate  data-updated="true" >May 2<span>nd</span>, 2011</time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://cgack.github.com/blog/2011/05/02/duostack-cloud-platform-as-a-service/" data-via="cgack" data-counturl="http://cgack.github.com/blog/2011/05/02/duostack-cloud-platform-as-a-service/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
   
 </div>
 
-      
-    </footer>
-  
+    
+  </footer>
 </article>
 
 </div>
