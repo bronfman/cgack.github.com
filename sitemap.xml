@@ -107,7 +107,7 @@
         <lastmod>2011-10-21T19:05:29-04:00</lastmod>
     </url>
     <url>
-        <loc>http://cgack.github.com/</loc>
+        <loc>http://cgack.github.com/old_</loc>
         <lastmod>2011-11-08T21:43:45-05:00</lastmod>
     </url>
     <url>
@@ -117,5 +117,9 @@
     <url>
         <loc>http://cgack.github.com/blog/</loc>
         <lastmod>2011-11-08T22:17:07-05:00</lastmod>
+    </url>
+    <url>
+        <loc>http://cgack.github.com/</loc>
+        <lastmod>2011-11-08T22:21:00-05:00</lastmod>
     </url>
 </urlset>
