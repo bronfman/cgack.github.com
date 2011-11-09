@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Cory Gackenheimer]]></title>
+  <title><![CDATA[cgack]]></title>
   <link href="http://cgack.github.com/atom.xml" rel="self"/>
   <link href="http://cgack.github.com/"/>
-  <updated>2011-10-23T18:26:53-04:00</updated>
+  <updated>2011-11-08T22:07:44-05:00</updated>
   <id>http://cgack.github.com/</id>
   <author>
     <name><![CDATA[Cory Gackenheimer]]></name>
