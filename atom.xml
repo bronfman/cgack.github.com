@@ -4,7 +4,7 @@
   <title><![CDATA[cgack]]></title>
   <link href="http://cgack.github.com/atom.xml" rel="self"/>
   <link href="http://cgack.github.com/"/>
-  <updated>2011-11-08T22:07:44-05:00</updated>
+  <updated>2011-11-08T22:18:20-05:00</updated>
   <id>http://cgack.github.com/</id>
   <author>
     <name><![CDATA[Cory Gackenheimer]]></name>
@@ -15,10 +15,10 @@
   
   <entry>
     <title type="html"><![CDATA[Moving to Octopress]]></title>
-    <link href="http://cgack.github.com/blog/2011/10/09/moving-to-octopress/"/>
-    <updated>2011-10-09T15:10:00-04:00</updated>
-    <id>http://cgack.github.com/blog/2011/10/09/moving-to-octopress</id>
-    <content type="html"><![CDATA[<p>I have been toying with the idea to move away from blogger to another blogging engine.  Since I&#8217;ve been doing most of my hacking via Github I have decided to move to <a href="http://octopress.org">Octopress</a>.  I have imported all my old posts and hopefully the conversion from HTML to .Markdown hasn&#8217;t caused too much trouble.</p>
+    <link href="http://cgack.github.com/blog/2011/11/08/moving-to-octopress/"/>
+    <updated>2011-11-08T22:14:00-05:00</updated>
+    <id>http://cgack.github.com/blog/2011/11/08/moving-to-octopress</id>
+    <content type="html"><![CDATA[<p>I have been toying with the idea to move away from blogger to another blogging engine.  Since I&#8217;ve been doing most of my hacking via Github I have decided to move to <a href="http://octopress.org">Octopress</a>.  I have imported most my old posts and hopefully the conversion hasn&#8217;t caused too much trouble.  The original posts can still be found on my <a href="http://blog.cgack.com">blogger blog</a></p>
 ]]></content>
   </entry>
   
