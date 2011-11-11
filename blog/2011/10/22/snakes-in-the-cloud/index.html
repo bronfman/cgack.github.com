@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Coding in the Cloud: Part II - cgack</title>
+  <title>Snakes in the Cloud - cgack</title>
   <meta name="author" content="Cory Gackenheimer">
 
   
-  <meta name="description" content="Coding in the cloud is something I feel I need to be able to do easily now that I&#8217;m utilizing my Google Chrome OS notebook.  Last post I disc...">
+  <meta name="description" content="I used to think that building web applications in Python for Google&#8217;s app engine was reserved for a desktop development environment. &nbsp;I ...">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://cgack.github.com/blog/2011/02/20/coding-in-the-cloud-part-ii/">
+  <link rel="canonical" href="http://cgack.github.com/blog/2011/10/22/snakes-in-the-cloud/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -64,7 +64,7 @@
   
   <header>
     
-      <h1 class="entry-title">Coding in the Cloud: Part II</h1>
+      <h1 class="entry-title">Snakes in the Cloud</h1>
     
     
       <p class="meta">
@@ -78,14 +78,19 @@
 
 
 
-<time datetime="2011-02-20T00:00:00-05:00" pubdate  data-updated="true" >Feb 20<span>th</span>, 2011</time>
+<time datetime="2011-10-22T17:38:00-04:00" pubdate  data-updated="true" >Oct 22<span>nd</span>, 2011</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content">Coding in the cloud is something I feel I need to be able to do easily now that I&#8217;m utilizing my Google Chrome OS notebook.  <a href="http://go-cloud-go.blogspot.com/2011/02/coding-in-cloud.html">Last post</a> I discussed utilizing an online development environment called CodeRun and found it to be quite useful, but it is not my favorite cloud development environment.  My favorite (so far) is called <a href="http://kodingen.com/">Kodingen</a>.<br /><br />Kodingen is &#8220;The Cloud Development Environment, Online Code Editor, Cloud Hosting, Web-based access to file system, Web-based ftp &amp; svn integration&#8221; or at least it will be all of those things.  Currently Kodingen is in Beta v3 so not all of those features are available as of this writing.  Even though this cloud development environment is not fully operational it is still fantastic.  As shown on their site, there is code support for php, perl, and python [with future support of django, ruby on rails, fastcgi,&#8230;].  The site you create is hosted on Kodingen, and they offer a default 500mb of diskspace, 1000mb of monthly traffic, 1 domain, 6 subdomains, and 5 databases by default (of course you can &#8220;get extra resources&#8221;).  So I set out to play around with Kodingen.<br /><br />Setting up an account was easy enough, so I logged in an got to work.  I quickly <a href="http://gocloudgo.kodingen.com/">created a website</a> with an HTML5 canvas star field plastered on it all from the comfort of my Cr-48.  As far as code editor selection, currently there is support for Bespin, CodeMirror, and Ymacs.  I found that CodeMirror suits my needs best, though I might have been inclined to choose Bespin (probably because of its <a href="http://starwars.wikia.com/wiki/Bespin">name</a>), but it lacks good support for copy/paste in Google Chrome.<br /><br />A couple features I have not utilized more than a simple evaluation are the database support and the image editing.  Creating a MySQL database was a snap (PostgreSQL, and SqLite support to come) so I created a simple database with a couple tables that seemed to perform well enough.  Image editing is currently supported using Pixlr (support for Aviary to come) and again seemed to perform well enough.  Kodingen also reports future support for code repositories such as svn, git, and mercurial where one can create teams to manage joint coding efforts (can&#8217;t wait to try it out).<br /><br />So after my week of trialling CodeRun and Kodingen, I must lean toward Kodingen based mostly on personal preference, but I feel that both systems create a sound cloud based development environment.  As I mentioned in the last post I think these systems would be ideal for educators wishing to introduce their students to web development or as a great code on the go environment.<div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/7333770831047956364-3314926599229429559?l=go-cloud-go.blogspot.com' alt='' /></div>
+<div class="entry-content"><div class="separator" style="clear: both; text-align: center;">
+<br /></div>
+I used to think that building web applications in Python for Google&#8217;s app engine was reserved for a desktop development environment. &nbsp;I had hacked a bit on an app or two and used the command line tools to test and publish to the app engine. &nbsp;Then I discovered <a href="https://coderbuddy1.appspot.com/">CoderBuddy</a>. &nbsp; CoderBuddy is a one stop shop for building python apps for the app engine. &nbsp;Once signed in you can create a blank project, or get a head start with one of six template apps. &nbsp;One template is of course a &#8220;hello world&#8221; app, but there are a &nbsp;few other samples including 3 that come with some <a href="https://www.djangoproject.com/">Django</a> (arguably the go to MVC framework for python web applications). &nbsp; I tested a couple of the template apps and found them to be quite useful. &nbsp;The &#8220;Adrian Remembers Me&#8221; template creates an app that allows users to become members and sign in. &nbsp; Here is a look at the editor with the main.py file opened for this project:<a href="http://2.bp.blogspot.com/-ES_BL0gUWTM/TqLjtn668qI/AAAAAAAAApU/-SwPW-jQsw8/s1600/cgack2-coderbuddy+-+CoderBuddy.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="256" src="http://2.bp.blogspot.com/-ES_BL0gUWTM/TqLjtn668qI/AAAAAAAAApU/-SwPW-jQsw8/s400/cgack2-coderbuddy+-+CoderBuddy.png" width="400" /></a><br />
+<br />
+<br />
+Each of these templates could be either a good launching point or reference for a new developer looking to quickly create a Python app. &nbsp;Deploying to the App Engine is just a few clicks away with CoderBuddy. &nbsp;So I &#8220;created&#8221; my Adrian Remembers Me app in one click and about two minutes later had my site running on the app engine at&nbsp;<a href="http://cgack2-coderbuddy.appspot.com/">http://cgack2-coderbuddy.appspot.com/</a>. &nbsp;The ease of deploy along with the ability to upload files and download the project as a .zip I will definitely look to CoderBuddy for part if not all of my next project.
 </div>
 
 
@@ -106,7 +111,7 @@
 
 
 
-<time datetime="2011-02-20T00:00:00-05:00" pubdate  data-updated="true" >Feb 20<span>th</span>, 2011</time>
+<time datetime="2011-10-22T17:38:00-04:00" pubdate  data-updated="true" >Oct 22<span>nd</span>, 2011</time>
       
 
 
@@ -114,7 +119,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://cgack.github.com/blog/2011/02/20/coding-in-the-cloud-part-ii/" data-via="cgack" data-counturl="http://cgack.github.com/blog/2011/02/20/coding-in-the-cloud-part-ii/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://cgack.github.com/blog/2011/10/22/snakes-in-the-cloud/" data-via="cgack" data-counturl="http://cgack.github.com/blog/2011/10/22/snakes-in-the-cloud/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
