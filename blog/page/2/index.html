@@ -9,7 +9,7 @@
   <meta name="author" content="Cory Gackenheimer">
 
   
-  <meta name="description" content="I have been doing a lot of development on my Cr-48 lately.  And as I sit here coding away I wanted to note how useful chrome is to me as a develope...">
+  <meta name="description" content="I have been using and trying many of the all-in-one solutions for web-based development on my Cr-48, but what happens when your favorite editor doe...">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -61,6 +61,40 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/05/02/duostack-cloud-platform-as-a-service/">Duostack: Cloud Platform as a Service</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+  
+
+
+
+<time datetime="2011-05-02T00:00:00-04:00" pubdate  data-updated="true" >May 2<span>nd</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content">I have been using and trying many of the all-in-one solutions for web-based development on my Cr-48, but what happens when your favorite editor does not deploy directly to where you want your app to live (<a href="http://c9.io/">cloud9</a>)?  I tried this recently with a <a href="http://nodejs.org/">NodeJS</a> app and a cloud platform (currently in beta) called <a href="https://www.duostack.com/">Duostack</a>.  For my NodeJS app, just as everyone else toying with Node, I <strike>reinvented</strike> reworked the wheel and used Ryan Dahl&#8217;s (creator of NodeJS) basic chat application.  All I did was partition the client to act like it had multiple rooms rather than one group room as in <a href="http://chat.nodejs.org/">the original</a>.  That is not what this post is about. This post is about how easy it is to get a node instance up and running on Duostack.<br /><div><br /></div><div>Duostack is a super easy to use cloud platform as a service for Node and Ruby apps.  Databases that are available by default are MySQL, MongoDB, and Redis (the documentation states external DBs are welcome).  The deployments live on the Amazon EC2 by default, but there is &#8216;cross-cloud reliability&#8217; that will allow for fail over to the Proactive Cloud in case of a <i>possible</i> Amazon outage.  Deployment is as simple as it could get with a cloud platform (well it could get simpler, but its super easy as you can read below). </div><div><br /></div><div>To setup Duostack I had to move away from Chrome OS and into Ubuntu on my Cr-48.  I followed the <a href="http://docs.duostack.com/node/command-line-client#setup">simple steps</a> to get the command line interface installed.  I used the curl method versus the node package manager install and had my Duostack instance configured shortly thereafter.  So now to create a Duostack app.  This is even easier then setup of the command line client, simply type &#8216;duostack create &#8217; and you have it. Duostack uses Git to control deployment so deploying is also a snap, just feed the command &#8216;git push duostack master&#8217; from your git repository, wait a few seconds while Duostack works the deployment magic, and you have your Duostack application deployed.  Mine lives <a href="http://noderooms.duostack.net/">here</a>.  So far I am more than pleased with my Duostack beta access and invite anyone with interest in deploying a Node or Ruby app to a cloud platform to <a href="https://www.duostack.com/signups/new">signup</a> and give it a try.  I have a few other betas for platform as a service solutions to check out, but Duostack got first dibs by granting me beta access before the others.</div><div><br /></div><div><br /></div><div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/7333770831047956364-6022969820459559969?l=go-cloud-go.blogspot.com' alt='' /></div>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -368,40 +402,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/03/03/coding-in-the-cloud-part/">Coding in the Cloud: Part ?</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-  
-
-
-
-<time datetime="2011-03-03T00:00:00-05:00" pubdate  data-updated="true" >Mar 3<span>rd</span>, 2011</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content">&#8220;your Cloud9 beta account has been activated&#8221;.  I had been anxiously awaiting this email (although one can sign up now without a wait period) to continue my quest to find the best coding environment for use with my Chrome OS on my Cr-48.  <a href="http://cloud9ide.com/">Cloud9</a> is another development-as-a-service platform that claims to be the go to solution to marry HTML5/JavaScript development with <a href="https://github.com/">github</a> and has received some decent <a href="http://www.pcmag.com/article2/0,2817,2381167,00.asp">reviews</a> lately after  its presentation at DEMO Spring 2011.  So I had to login and get coding.<br /><br />I followed the link provided and once signed in I was able to quickly create a new project.  I added an html file and a JavaScript file to create a simple &#8220;hello world&#8221; website to test how the cloud9 development environment worked.  I saved my work, then clicked &#8220;Preview&#8221; and my boring website was previewed in a new tab.  Everything was working well until I returned to my project files and decided I wanted to rename them from untitled.html and untitled.js to test.html and test.js.  Moments later as I was about the check out the &#8220;Run&#8221; and &#8220;Debug&#8221; options mysteriously the screen flashed and the files were once again named as the default &#8220;untitled&#8221;.  I saved the project to return later and investigate.<br /><br />So I signed back in to my account and saw my previously saved project and selected &#8220;Open&#8221;.  This took me to the sign in screen only the styles were all gone and it was a bunch of blank screen with the login box.  I of course had to try again, and after repeating this behavior a few times I thought, &#8220;maybe this is because its a beta account&#8221;.  So I created a new account and thought &#8220;at least I can get a test project started to my testing so I can do a good comparison of cloud9 with kodingen and coderun&#8221; but I was not able to create a project at all.  I tried to use the shared github project that cloud9 provides as an example and that to failed. <br /><br />Apparently cloud9 is getting hit hard with tons of new users who are experience some issues similar to mine, at least according to some of their <a href="http://twitter.com/cloud9ide/">twitter posts</a>.  I&#8217;ll be anxious to get a real review of this cloud based development environment because in my brief time on the inside, it seemed very easy to use and elegantly constructed.<div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/7333770831047956364-1003747965081301741?l=go-cloud-go.blogspot.com' alt='' /></div>
-</div>
-  
-  
-
-
-    </article>
-  
   <nav class="pagination">
     <div>
       
@@ -468,6 +468,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2011/12/19/canvas/">Canvas, History, LocalStorage and More</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2011/11/08/moving-to-octopress/">Moving to Octopress</a>
       </li>
     
@@ -481,10 +485,6 @@
     
       <li class="post">
         <a href="/blog/2011/08/25/github-goes-ace-and-demos/">github goes ace (and demos)</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2011/07/08/chrome-dev-tools-as-an-ide/">Chrome Dev Tools as an IDE</a>
       </li>
     
   </ul>

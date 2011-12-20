@@ -4,7 +4,7 @@
   <title><![CDATA[cgack]]></title>
   <link href="http://cgack.github.com/atom.xml" rel="self"/>
   <link href="http://cgack.github.com/"/>
-  <updated>2011-11-11T17:41:14-05:00</updated>
+  <updated>2011-12-20T06:11:28-05:00</updated>
   <id>http://cgack.github.com/</id>
   <author>
     <name><![CDATA[Cory Gackenheimer]]></name>
@@ -12,6 +12,173 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Canvas, History, LocalStorage and More]]></title>
+    <link href="http://cgack.github.com/blog/2011/12/19/canvas/"/>
+    <updated>2011-12-19T18:17:00-05:00</updated>
+    <id>http://cgack.github.com/blog/2011/12/19/canvas</id>
+    <content type="html"><![CDATA[<p>A few months ago I entered the <a href="https://developer.mozilla.org/en-US/demos/devderby/2011/august/">August Mozilla Dev Derby</a>, which focused on the History API. I have seen some of the amazing things that the new changes to this interface have been able to make from folks like <a href="https://www.facebook.com/note.php?note_id=438532093919">Facebook</a> and <a href="https://github.com/blog/760-the-tree-slider">GitHub</a> but I wanted to try something a little different. I had been hacking on a simple drawing canvas and decided that I could leverage the History API to create a more application like experience. Since winning the Derby, I&#8217;ve seen my code improved and extended in a <a href="https://developer.mozilla.org/en-US/demos/detail/paint-search">later Dev Derby Entry</a>, and I turned it into a sample <a href="https://apps-preview.mozilla.org/en-US/apps/app/draw/?src=cb-dl-free">application</a> for <a href="https://apps-preview.mozilla.org/en-US/apps/">Mozilla&#8217;s new App experience</a>. Here’s a peek into the process of creating a drawing demo like the one I created.</p>
+
+<h2>Basic Setup</h2>
+
+<p>Firstly, we’re going to need to create a canvas.  This is pretty straightforward for those who have done this sort of thing before, but for a reminder that can look like the following</p>
+
+<pre><code>    &lt;!DOCTYPE html&gt;
+    &lt;html&gt;
+    &lt;body&gt;
+     &lt;div id="content"&gt;
+        &lt;canvas id="canvas" height="500" width="500"&gt;&lt;/canvas&gt;
+     &lt;/div&gt;
+    &lt;/body&gt;
+    &lt;/html&gt;
+</code></pre>
+
+<p>Now that we have our canvas we can start to initialize it and get ready to roll with the fun features we’d like to demonstrate.</p>
+
+<pre><code>var canvas = document.getElementById("canvas"),
+    ctx = canvas.getContext("2d"),
+    img, //more about this later
+    blankCanvas = true; //this too
+</code></pre>
+
+<p>We now need to set it up to allow for drawing.  This is done by adding a event listeners to the mouse events we’d like to watch.</p>
+
+<pre><code>window.addEventListener("mousedown", setupDraw, false);
+window.addEventListener("mousemove", setupDraw, false);
+window.addEventListener("mouseup", setupDraw, false);
+</code></pre>
+
+<p>You’ll notice the setupDraw function is called on all of these events.  This function will grab the coordinates of our pointer (less the offset of our lovely #content div and send those to our draw object.</p>
+
+<pre><code>function setupDraw(event) {
+    var cnt = document.getElementById("content"),
+        coordinates = {
+            x: event.pageX - cnt.offsetLeft,
+            y: event.pageY - cnt.offsetTop
+          };
+    draw[event.type](coordinates);
+};
+</code></pre>
+
+<p>Now time for the drawing I’ll go ahead and let you peek at the source so you can follow along.</p>
+
+<pre><code>var draw = {
+    isDrawing: false,
+    mousedown: function(coordinates) {
+        ctx.beginPath();
+        ctx.moveTo(coordinates.x, coordinates.y);
+        this.isDrawing = true;
+    },
+    mousemove: function(coordinates) {
+        if (this.isDrawing) {
+            ctx.lineTo(coordinates.x, coordinates.y);
+            ctx.stroke();
+        }
+    },
+    mouseup: function(coordinates) {
+        this.isDrawing = false;
+        ctx.lineTo(coordinates.x, coordinates.y);
+        ctx.stroke();
+        ctx.closePath();
+      }
+};
+</code></pre>
+
+<p>You’ll see this object directs to an event type specific function and handles the coordinates parameters which are passed into the object.  Following some basic canvas drawing steps for ctx.beginPath() -> ctx.moveTo(x,y) -> ctx.lineTo(x,y) -> ctx.stroke() -> ctx.closePath() we now have the ability to draw with our mouse.  The “isDrawing” property is there to let us know to continue our strokes on mousemove.  Now that we have an example that allows us to draw, we’ll move forward to make it more interesting by utilizing the History API and LocalStorage.</p>
+
+<h2>About the History API</h2>
+
+<p>One of the new features in HTML5 (an subject of the Dev Derby) is the additional features of the History API.   These are history.pushState(data,title [,url]) and history.replaceState(data, title [,url] ) which are utilized to directly push (or replace) data in the session history.  For the purposes of this demo we’ll be using pushState to add data, specifically the image data from the canvas, to the current URL.  Now this alone is not enough we will also need to know when the current state changes, which is made accessible to us via the window.onpopstate event.  This event fires when the browser gets a new history event.  We can inspect the event to see if it contains a state and then load the data (hopefully our image) into the canvas.  So to get things wired up correctly, its time to add a function to store the history.</p>
+
+<pre><code>var storeHistory = function () {
+    img = canvas.toDataURL("image/png");
+    history.pushState({ imageData: img }, "", window.location.href);
+};
+</code></pre>
+
+<p>This grabs the data from the canvas in the form of a “data:image/png&#8230;” url.  Then we create a new history state by pushing an imageData attribute for later retrieval.  Now, before we add the calls to storeHistory to our drawing application, we need to do a bit of preventative maintenance.  If we store this data and navigate backward without a reinitialization of the canvas, we will just draw the stored imageData onto the existing image.  To us this will look like it isn’t working so we need to add an initialization function to reset our canvas.</p>
+
+<pre><code>var initializeCvs = function () {
+    ctx.lineCap = "round";
+    ctx.save();
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    ctx.restore();
+}
+</code></pre>
+
+<p>Now we can go about the business of storing our history states.  The code that follows will store history in two places.  The first place it stores is if the canvas is blank it stores that before drawing anything.  The second is on the mouseup event after  the line is completed.  Now our draw object looks like this:</p>
+
+<pre><code>var draw = {
+    isDrawing: false,
+    mousedown: function(coordinates) {
+        if (blankCanvas) { storeHistory(); blankCanvas = false; }
+        ctx.beginPath();
+        ctx.moveTo(coordinates.x, coordinates.y);
+        this.isDrawing = true;
+    },
+    mousemove: function(coordinates) {
+        if (this.isDrawing) {
+            ctx.lineTo(coordinates.x, coordinates.y);
+            ctx.stroke();
+        }
+    },
+    mouseup: function(coordinates) {
+        this.isDrawing = false;
+        ctx.lineTo(coordinates.x, coordinates.y);
+        ctx.stroke();
+        ctx.closePath();
+        storeHistory();
+    }
+};
+</code></pre>
+
+<p>Awesome, now we have started storing history on the page with each completed line.  Now we need to be able to see the results of this work when the history state changes.  As I mentioned earlier this is done via the window.onpopstate event.  We will examine the imageData of the state (if it exists) and place that image on the canvas as follows:</p>
+
+<pre><code> window.onpopstate = function (event) {
+        if (event.state !== null) {
+            img = new Image();
+            img.onload =function () {
+                ctx.drawImage(img, 0, 0);
+            };
+            img.src = event.state.imageData;
+        }
+    };
+</code></pre>
+
+<p>Splendid, we now  have a drawing tool that stores history so we can undo and redo drawings.  But wait!  What happens if I’m in the middle of a canvas masterpiece and my browser crashes?  Lets handle that with localStorage.  With localStorage we can store a named item locally independent of our session, so in the event of leaving the page, we can retrieve data from our previous encounter.  In this demo I did a simple test of the window.localStorage object to see if we can store data, and then I store the latest image so upon return you’ll at least be able to recover that data.  Here are the initializeCanvas and storeHistory functions with this additional feature added:</p>
+
+<pre><code>var initializeCvs = function () {
+    ctx.lineCap = "round";
+    ctx.save();
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    ctx.restore();
+
+    if (window.localStorage) {
+        img = new Image();
+        img.onload = function () {
+            ctx.drawImage(img, 0, 0);
+        };
+        if (localStorage.curImg) {
+            img.src = localStorage.curImg;
+            blankCanvas = false;
+        }
+    }
+}
+
+var storeHistory = function () {
+    img = canvas.toDataURL("image/png");
+    history.pushState({ imageData: img }, "", window.location.href);
+
+    if (window.localStorage) { localStorage.curImg = img; }
+};
+</code></pre>
+
+<p>  You can see the full working demo in <a href="http://jsfiddle.net/cgack/JHr2P/">this jsFiddle</a>.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Moving to Octopress]]></title>
@@ -187,15 +354,6 @@ Each of these templates could be either a good launching point or reference for 
     <updated>2011-03-03T00:00:00-05:00</updated>
     <id>http://cgack.github.com/blog/2011/03/03/remotely-coding</id>
     <content type="html"><![CDATA[A few weeks ago I wrote a review of some web-based tools to remotely control my PC from my Cr-48.  I have to admit that after spending a real work day remotely coding while using my Cr-48 to connect to my PC at work, the win has to go to LogMeIn.  I had thought I could ignore some of the minor issues of TeamViewer because I really enjoyed how simple it seemed, but the character mismatches from what I typed on this end to what resulted on my work PC were not tolerable.  So I think the results should really be that TeamViewer is a simple solution for perhaps remotely helping a relative with an issue on their PC, but for coding remotely, my vote is now entirely for LogMeIn.<div class="blogger-post-footer"><img width='1' height='1' src='' alt='' /></div>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Coding in the Cloud: Part ?]]></title>
-    <link href="http://cgack.github.com/blog/2011/03/03/coding-in-the-cloud-part/"/>
-    <updated>2011-03-03T00:00:00-05:00</updated>
-    <id>http://cgack.github.com/blog/2011/03/03/coding-in-the-cloud-part</id>
-    <content type="html"><![CDATA[&#8220;your Cloud9 beta account has been activated&#8221;.  I had been anxiously awaiting this email (although one can sign up now without a wait period) to continue my quest to find the best coding environment for use with my Chrome OS on my Cr-48.  <a href="http://cloud9ide.com/">Cloud9</a> is another development-as-a-service platform that claims to be the go to solution to marry HTML5/JavaScript development with <a href="https://github.com/">github</a> and has received some decent <a href="http://www.pcmag.com/article2/0,2817,2381167,00.asp">reviews</a> lately after  its presentation at DEMO Spring 2011.  So I had to login and get coding.<br /><br />I followed the link provided and once signed in I was able to quickly create a new project.  I added an html file and a JavaScript file to create a simple &#8220;hello world&#8221; website to test how the cloud9 development environment worked.  I saved my work, then clicked &#8220;Preview&#8221; and my boring website was previewed in a new tab.  Everything was working well until I returned to my project files and decided I wanted to rename them from untitled.html and untitled.js to test.html and test.js.  Moments later as I was about the check out the &#8220;Run&#8221; and &#8220;Debug&#8221; options mysteriously the screen flashed and the files were once again named as the default &#8220;untitled&#8221;.  I saved the project to return later and investigate.<br /><br />So I signed back in to my account and saw my previously saved project and selected &#8220;Open&#8221;.  This took me to the sign in screen only the styles were all gone and it was a bunch of blank screen with the login box.  I of course had to try again, and after repeating this behavior a few times I thought, &#8220;maybe this is because its a beta account&#8221;.  So I created a new account and thought &#8220;at least I can get a test project started to my testing so I can do a good comparison of cloud9 with kodingen and coderun&#8221; but I was not able to create a project at all.  I tried to use the shared github project that cloud9 provides as an example and that to failed. <br /><br />Apparently cloud9 is getting hit hard with tons of new users who are experience some issues similar to mine, at least according to some of their <a href="http://twitter.com/cloud9ide/">twitter posts</a>.  I&#8217;ll be anxious to get a real review of this cloud based development environment because in my brief time on the inside, it seemed very easy to use and elegantly constructed.<div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/7333770831047956364-1003747965081301741?l=go-cloud-go.blogspot.com' alt='' /></div>
 ]]></content>
   </entry>
   
