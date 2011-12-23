@@ -9,7 +9,7 @@
   <meta name="author" content="Cory Gackenheimer">
 
   
-  <meta name="description" content="A few months ago I entered the August Mozilla Dev Derby, which focused on the History API. I have seen some of the amazing things that the new chan...">
+  <meta name="description" content="Browsers are not secure.  They won’t ever be invincible to malicious attacks.  Browser A does not serve the same set of security mechanisms as Brow...">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -61,6 +61,46 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/12/23/book-review-the-tangled-web/">Book Review: The Tangled Web</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+  
+
+
+
+<time datetime="2011-12-23T07:39:00-05:00" pubdate  data-updated="true" >Dec 23<span>rd</span>, 2011</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Browsers are not secure.  They won’t ever be invincible to malicious attacks.  Browser A does not serve the same set of security mechanisms as Browser B.  These points are highlighted in Michal Zalewski’s book “The Tangled Web: A Guide to Securing Modern Web Applications”, but Zalewski, an expert in browser security and author of <a href="http://code.google.com/p/browsersec/">Google’s Browser Security Handbook</a>, discusses in detail common and known vulnerabilities, providing hints and tips to keep web applications as secure as possible along the way.</p>
+
+<p>The book starts with a relatively exhaustive dissection of the “Anatomy of the Web”, highlighting the history of the web, from HTTP up to Plug-ins such as Flash and Silverlight all while noting some of the varying browser implementations of many common web functionalities.  For example when discussing the Content-Disposition  Header, Zalewski notes that these headers “are truncated at NUL by Internet Explorer, Firefox, and Chrome but not by Opera or Safari”,</p>
+
+<p>In parts Two and Three of the book, the meat of browser security features are discussed in depth.  Highlights include a detailed look at the Same Origin Policy for all aspects of the modern web, including Scripts,  XHR, Cookies, and Plugins.  Another intriguing look into browser inner workings was the sections on special psuedo urls such as about:, javascript:, and data: and how these can lead to interesting handlings of the origination of the requests across browser implementations.  For example about:blank can be navigated to from an Existing non-same-origin page and have its origin inherited from the caller in Firefox, Webkit, and Opera while gaining a unique origin in Internet Explorer.</p>
+
+<p>Perhaps one the most valuable parts of “The Tangled Web” is how Zalewski adds a handy “Security Engineering Cheat Sheet” to the end of each chapter.   Having these quick tips at ones fingertips is a remarkable asset and great addition to the book.  I could continue to outline the great parts of this book, and tout the security expertise that jumps from the pages, but the most important parts in the book are what each reader takes away.  Whether its a small attack vector that a reader picks up on to close a vulnerability in their own web application, or an interesting fact about browser inconsistencies, each reader should gain something from this book.  For me, the take away is that as a developer there is no magic bullet and we will always uncover new security holes in our web applications, either from poor programming, or new features of a browser’s implementation.  And that our expectations should not be that we have a perfectly impenetrable web, or are capable of producing one.  Zalewski puts it like this, “As the complexity of our online interactions approaches that of real life, the odds of designing perfectly secure software are rapidly diminishing”</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -532,40 +572,6 @@ Each of these templates could be either a good launching point or reference for 
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/05/12/chromebooks/">Chromebooks!</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-  
-
-
-
-<time datetime="2011-05-12T00:00:00-04:00" pubdate  data-updated="true" >May 12<span>th</span>, 2011</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content">Yesterday, at Day 2 of Google I/O, it was officially announced that <a href="http://www.google.com/chromebook/#">Chromebooks</a> will be available in retail locations worldwide starting June 15th.  Perhaps even more exciting news was the mention that for Educational institutions (and businesses) these would be available at $20/month/user ($28/mo/user for business) which could be a huge savings (70% over traditional PCs according to the graphic <a href="http://www.google.com/chromebook/#business-education">here</a>). <br /><br />Here is the Keynote from Google I/O day two for those who missed it:<br />[youtube http://www.youtube.com/watch?v=MiYND_zvIc0]<div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/7333770831047956364-771895672650425206?l=go-cloud-go.blogspot.com' alt='' /></div>
-</div>
-  
-  
-
-
-    </article>
-  
   <nav class="pagination">
     <div>
       
@@ -630,6 +636,10 @@ Each of these templates could be either a good launching point or reference for 
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2011/12/23/book-review-the-tangled-web/">Book Review: The Tangled Web</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2011/12/19/canvas/">Canvas, History, LocalStorage and More</a>
       </li>
     
@@ -643,10 +653,6 @@ Each of these templates could be either a good launching point or reference for 
     
       <li class="post">
         <a href="/blog/2011/09/02/cloud-9-adds-heroku-support/">Cloud 9 adds Heroku Support</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2011/08/25/github-goes-ace-and-demos/">github goes ace (and demos)</a>
       </li>
     
   </ul>

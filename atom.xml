@@ -4,7 +4,7 @@
   <title><![CDATA[cgack]]></title>
   <link href="http://cgack.github.com/atom.xml" rel="self"/>
   <link href="http://cgack.github.com/"/>
-  <updated>2011-12-20T06:11:28-05:00</updated>
+  <updated>2011-12-23T16:38:59-05:00</updated>
   <id>http://cgack.github.com/</id>
   <author>
     <name><![CDATA[Cory Gackenheimer]]></name>
@@ -12,6 +12,21 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Book Review: The Tangled Web]]></title>
+    <link href="http://cgack.github.com/blog/2011/12/23/book-review-the-tangled-web/"/>
+    <updated>2011-12-23T07:39:00-05:00</updated>
+    <id>http://cgack.github.com/blog/2011/12/23/book-review-the-tangled-web</id>
+    <content type="html"><![CDATA[<p>Browsers are not secure.  They won’t ever be invincible to malicious attacks.  Browser A does not serve the same set of security mechanisms as Browser B.  These points are highlighted in Michal Zalewski’s book “The Tangled Web: A Guide to Securing Modern Web Applications”, but Zalewski, an expert in browser security and author of <a href="http://code.google.com/p/browsersec/">Google’s Browser Security Handbook</a>, discusses in detail common and known vulnerabilities, providing hints and tips to keep web applications as secure as possible along the way.</p>
+
+<p>The book starts with a relatively exhaustive dissection of the “Anatomy of the Web”, highlighting the history of the web, from HTTP up to Plug-ins such as Flash and Silverlight all while noting some of the varying browser implementations of many common web functionalities.  For example when discussing the Content-Disposition  Header, Zalewski notes that these headers “are truncated at NUL by Internet Explorer, Firefox, and Chrome but not by Opera or Safari”,</p>
+
+<p>In parts Two and Three of the book, the meat of browser security features are discussed in depth.  Highlights include a detailed look at the Same Origin Policy for all aspects of the modern web, including Scripts,  XHR, Cookies, and Plugins.  Another intriguing look into browser inner workings was the sections on special psuedo urls such as about:, javascript:, and data: and how these can lead to interesting handlings of the origination of the requests across browser implementations.  For example about:blank can be navigated to from an Existing non-same-origin page and have its origin inherited from the caller in Firefox, Webkit, and Opera while gaining a unique origin in Internet Explorer.</p>
+
+<p>Perhaps one the most valuable parts of “The Tangled Web” is how Zalewski adds a handy “Security Engineering Cheat Sheet” to the end of each chapter.   Having these quick tips at ones fingertips is a remarkable asset and great addition to the book.  I could continue to outline the great parts of this book, and tout the security expertise that jumps from the pages, but the most important parts in the book are what each reader takes away.  Whether its a small attack vector that a reader picks up on to close a vulnerability in their own web application, or an interesting fact about browser inconsistencies, each reader should gain something from this book.  For me, the take away is that as a developer there is no magic bullet and we will always uncover new security holes in our web applications, either from poor programming, or new features of a browser’s implementation.  And that our expectations should not be that we have a perfectly impenetrable web, or are capable of producing one.  Zalewski puts it like this, “As the complexity of our online interactions approaches that of real life, the odds of designing perfectly secure software are rapidly diminishing”</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Canvas, History, LocalStorage and More]]></title>
@@ -345,15 +360,6 @@ Each of these templates could be either a good launching point or reference for 
     <updated>2011-03-10T00:00:00-05:00</updated>
     <id>http://cgack.github.com/blog/2011/03/10/rad-with-wavemaker</id>
     <content type="html"><![CDATA[Yesterday <a href="http://www.vmware.com/">VMware</a> <a href="http://blog.springsource.com/2011/03/08/vmware-acquires-wavemaker/">announced</a> they had acquired <a href="http://www.wavemaker.com/">WaveMaker</a>.  I had not explored WaveMaker, but luckily the news exposed this wonderful development tool for me.  WaveMaker is a tool for Rapid Application Development (RAD) that is perhaps the worlds greatest WYSIWYG editor.  Not just WYSIWYG for HTML or page layout, but it can completely eliminate the need for Java coding and with its integrated data structure mappings with <a href="http://www.hibernate.org/">Hibernate</a> it can easily integrate with any enterprise database.  The point is that anyone who is computer capable can write a fully functional web application and maintain it without the need for developer time.  As a bonus, there is integration with the big names in cloud hosting like <a href="http://aws.amazon.com/ec2/">Amazon EC2</a>, <a href="http://www.rackspace.com/">Rackspace</a>, Eucalyptus, and OpSource<div><br /></div><div>I checked out the example videos and was amazed.  I was especially excited because I of course noted there was a <a href="http://cloud.wavemaker.com/">cloud version</a> available.   Of course the site is down for maintenance without any idea as to when service would be restored.  Being an avid user or Chrome OS on my Cr-48 I was extremely bummed.  So I decided to  cheat a little (its still browser based app development, however it required installing software) and I cranked up developer mode on my Cr-48 and entered my Ubuntu Linux boot.  I downloaded WaveMaker and kicked it off.  </div><div><br /></div><div>Amazing.  I created a test project with one of the provided templates and started dragging objects onto my web page.  Styling is available at the click of a button, and wiring up events to buttons exposes so special handling can be added.  I can already grasp the power of this tool and I have not spent a whole hour in it.  I can imagine in the coming days and weeks as I get the chance to get more familiar with it, I will be even more amazed.  I am also excited for when the cloud.wavemaker.com site is operational again when the true power of being able to code an application in the cloud and even deploy to a cloud host like EC2 without leaving the comfort of the browser.</div><div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/7333770831047956364-6275451656771976201?l=go-cloud-go.blogspot.com' alt='' /></div>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Remotely Coding]]></title>
-    <link href="http://cgack.github.com/blog/2011/03/03/remotely-coding/"/>
-    <updated>2011-03-03T00:00:00-05:00</updated>
-    <id>http://cgack.github.com/blog/2011/03/03/remotely-coding</id>
-    <content type="html"><![CDATA[A few weeks ago I wrote a review of some web-based tools to remotely control my PC from my Cr-48.  I have to admit that after spending a real work day remotely coding while using my Cr-48 to connect to my PC at work, the win has to go to LogMeIn.  I had thought I could ignore some of the minor issues of TeamViewer because I really enjoyed how simple it seemed, but the character mismatches from what I typed on this end to what resulted on my work PC were not tolerable.  So I think the results should really be that TeamViewer is a simple solution for perhaps remotely helping a relative with an issue on their PC, but for coding remotely, my vote is now entirely for LogMeIn.<div class="blogger-post-footer"><img width='1' height='1' src='' alt='' /></div>
 ]]></content>
   </entry>
   

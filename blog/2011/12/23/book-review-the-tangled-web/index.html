@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Chrome Dev Tools as an IDE - cgack</title>
+  <title>Book Review: The Tangled Web - cgack</title>
   <meta name="author" content="Cory Gackenheimer">
 
   
-  <meta name="description" content="I&#8217;ve spent a lot of time trying to find the best development method in Chrome OS.  Recently I decided I wanted to create a chrome extension u...">
+  <meta name="description" content="Browsers are not secure.  They won’t ever be invincible to malicious attacks.  Browser A does not serve the same set of security mechanisms as Brow...">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://cgack.github.com/blog/2011/07/08/chrome-dev-tools-as-an-ide/">
+  <link rel="canonical" href="http://cgack.github.com/blog/2011/12/23/book-review-the-tangled-web/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -64,7 +64,7 @@
   
   <header>
     
-      <h1 class="entry-title">Chrome Dev Tools as an IDE</h1>
+      <h1 class="entry-title">Book Review: The Tangled Web</h1>
     
     
       <p class="meta">
@@ -78,14 +78,20 @@
 
 
 
-<time datetime="2011-07-08T00:00:00-04:00" pubdate  data-updated="true" >Jul 8<span>th</span>, 2011</time>
+<time datetime="2011-12-23T07:39:00-05:00" pubdate  data-updated="true" >Dec 23<span>rd</span>, 2011</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content">I&#8217;ve spent a lot of time trying to find the best development method in Chrome OS.  Recently I decided I wanted to create a chrome extension using Chrome OS.  My first stop was CodeRun IDE which has a sample Chrome Extension project so I thought it would be great for a starter.  The development is pretty mess free, but the problem comes once its downloaded.  It comes downloaded and zipped.  When loading an unpackaged Chrome Extension you can point Chrome to a directory, but not a zipped directory.  So I had to unzip the files&#8230;which was pretty easy to do once I found <a href="http://wobzip.org/">wobzip</a>.<br /><br />Now that I had a skeleton Chrome Extension up and running, I could start to make it my own.  I decided on a simple calculator for starters, plus I thought it might be useful.  I have to admit it had been a while since I&#8217;d used the user &#8216;chronos&#8217; in Developer mode, but once I got it there I found that Chrome OS had a new default text editor (thankfully) in &#8216;vi&#8217;.  This is where it got really fun.  I edited my popup.html file to have a stylesheet and JavaScript file and loaded the html directly in Chrome.  Enter the best web app ever&#8230; Chrome Dev Tools.<br /><br />With Dev tools I am able to make changes to my stylesheets through the inspector to get the style just how I want, then save the modified .css file to the extension directory. <br /> Similarly, I can edit and save versions of my JavaScript file directly from Dev tools.  The only issue with this is when I overlooked some invalid code which prevented Chrome from loading the JavaScript file.  This was not much of an issue the one time it happened to me, as I was able to enter vi and quickly rectify the rogue curly brace and was back to Dev Tools in no time.  So If you ask me what my choice is for rapid JavaScript development, I&#8217;ll say Chrome Dev Tools.<br /><br /> The result from blank files to:<br /><br /><br />and <br /><br /><div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/7333770831047956364-1069319577707889253?l=go-cloud-go.blogspot.com' alt='' /></div>
+<div class="entry-content"><p>Browsers are not secure.  They won’t ever be invincible to malicious attacks.  Browser A does not serve the same set of security mechanisms as Browser B.  These points are highlighted in Michal Zalewski’s book “The Tangled Web: A Guide to Securing Modern Web Applications”, but Zalewski, an expert in browser security and author of <a href="http://code.google.com/p/browsersec/">Google’s Browser Security Handbook</a>, discusses in detail common and known vulnerabilities, providing hints and tips to keep web applications as secure as possible along the way.</p>
+
+<p>The book starts with a relatively exhaustive dissection of the “Anatomy of the Web”, highlighting the history of the web, from HTTP up to Plug-ins such as Flash and Silverlight all while noting some of the varying browser implementations of many common web functionalities.  For example when discussing the Content-Disposition  Header, Zalewski notes that these headers “are truncated at NUL by Internet Explorer, Firefox, and Chrome but not by Opera or Safari”,</p>
+
+<p>In parts Two and Three of the book, the meat of browser security features are discussed in depth.  Highlights include a detailed look at the Same Origin Policy for all aspects of the modern web, including Scripts,  XHR, Cookies, and Plugins.  Another intriguing look into browser inner workings was the sections on special psuedo urls such as about:, javascript:, and data: and how these can lead to interesting handlings of the origination of the requests across browser implementations.  For example about:blank can be navigated to from an Existing non-same-origin page and have its origin inherited from the caller in Firefox, Webkit, and Opera while gaining a unique origin in Internet Explorer.</p>
+
+<p>Perhaps one the most valuable parts of “The Tangled Web” is how Zalewski adds a handy “Security Engineering Cheat Sheet” to the end of each chapter.   Having these quick tips at ones fingertips is a remarkable asset and great addition to the book.  I could continue to outline the great parts of this book, and tout the security expertise that jumps from the pages, but the most important parts in the book are what each reader takes away.  Whether its a small attack vector that a reader picks up on to close a vulnerability in their own web application, or an interesting fact about browser inconsistencies, each reader should gain something from this book.  For me, the take away is that as a developer there is no magic bullet and we will always uncover new security holes in our web applications, either from poor programming, or new features of a browser’s implementation.  And that our expectations should not be that we have a perfectly impenetrable web, or are capable of producing one.  Zalewski puts it like this, “As the complexity of our online interactions approaches that of real life, the odds of designing perfectly secure software are rapidly diminishing”</p>
 </div>
 
 
@@ -106,7 +112,7 @@
 
 
 
-<time datetime="2011-07-08T00:00:00-04:00" pubdate  data-updated="true" >Jul 8<span>th</span>, 2011</time>
+<time datetime="2011-12-23T07:39:00-05:00" pubdate  data-updated="true" >Dec 23<span>rd</span>, 2011</time>
       
 
 
@@ -114,7 +120,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://cgack.github.com/blog/2011/07/08/chrome-dev-tools-as-an-ide/" data-via="cgack" data-counturl="http://cgack.github.com/blog/2011/07/08/chrome-dev-tools-as-an-ide/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://cgack.github.com/blog/2011/12/23/book-review-the-tangled-web/" data-via="cgack" data-counturl="http://cgack.github.com/blog/2011/12/23/book-review-the-tangled-web/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
