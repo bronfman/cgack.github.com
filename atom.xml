@@ -4,7 +4,7 @@
   <title><![CDATA[cgack]]></title>
   <link href="http://cgack.github.com/atom.xml" rel="self"/>
   <link href="http://cgack.github.com/"/>
-  <updated>2011-12-23T16:38:59-05:00</updated>
+  <updated>2011-12-28T17:25:48-05:00</updated>
   <id>http://cgack.github.com/</id>
   <author>
     <name><![CDATA[Cory Gackenheimer]]></name>
@@ -12,6 +12,72 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Collision Detection on Canvas]]></title>
+    <link href="http://cgack.github.com/blog/2011/12/28/collision-detection-on-canvas/"/>
+    <updated>2011-12-28T16:59:00-05:00</updated>
+    <id>http://cgack.github.com/blog/2011/12/28/collision-detection-on-canvas</id>
+    <content type="html"><![CDATA[<p>I was toying around with a bouncing ball on an HTML canvas the other day when I wanted to find an easy way to detect collisions. One thing that is easy is validating against the bounds of the canvas. This is done with a simple check on the bounds of the canvas as follows:</p>
+
+<pre><code>//this is a Ball object
+if (this.position.y &gt; bound.y2) {
+    this.velocity.x2 = -this.velocity.x2 * drag;
+    this.position.y = bound.y2;
+} else if (this.position.y &lt; bound.y1) {
+    this.velocity.x2 = -this.velocity.x2 * drag;
+    this.position.y = bound.y1;
+}
+if (this.position.x &lt; bound.x1) {
+    this.velocity.x1 = -this.velocity.x1 * drag;
+    this.position.x = bound.x1;
+} else {
+    if (this.position.x &gt; bound.x2) {
+        this.velocity.x1 = -this.velocity.x1 * drag;
+        this.position.x = bound.x2;
+    }
+}
+</code></pre>
+
+<p>You&#8217;ll see that if we get the Ball beyond the bounds of either axis we reverse the velocity vector (and for my example) I augment that vector with some drag.  Then I start the Ball off (headed the other direction now) from the start of the boundary.  This is straight forward and not too difficult to come up with.  The same can be done for other shapes on the canvas which we do not wish for the ball to pass through.  These again can be simple if we know the layout and the position of the target walls (think floating boxes).  Where this gets to a point where the shapes are not at right angles or the boundaries have become more arbitrary, I no longer want to calculate each possible collision point.  I also do not wish to wrap the object into a larger boundary box to utilize for detection.  So a more elegant solution can be found.  If we, just before moving the ball, simulate the move and have another means for detection we can then change the trajectory of the object and send it sailing away.  Here&#8217;s what we need.  we need a ball sized snapshot of the canvas where we plan to put the ball on the next move.  We then iterate through those pixels on the image and find ones that arent the color of our background (in my case non-white).  To do this without also seeing the ball as a collided upon object, I&#8217;ll clear the canvas of the ball first.  Here is the code:</p>
+
+<pre><code>//clear canvas, add shape
+context.clearRect(0, 0, canvasWidth, canvasHeight);
+
+context.fillStyle = "rgb(150,150,150)"; //not white
+context.beginPath();
+context.moveTo(200, 100);
+context.lineTo(300, 125);
+context.lineTo(250, 175);
+context.lineTo(200, 200);
+context.lineTo(200, 100);
+context.fill();
+context.closePath();
+
+//now we check our next move for collision
+var imgData = context.getImageData(this.position.x + this.velocity.x1, this.position.y + this.velocity.x2, r, r);
+var pix = imgData.data;
+for (var i = 0; n = pix.length, i &lt; n; i += 4) {
+    //check if we're not on a white pixel
+    if (pix[i] != 0) { 
+        this.collided = true; 
+        //bounce away
+        if (Math.abs(this.velocity.x1) &gt; Math.abs(this.velocity.x2)){
+            this.velocity.x1 = -this.velocity.x1 * drag;
+        } else {
+            this.velocity.x2 = -this.velocity.x2 * drag;
+        }
+        break;
+    } else {
+        this.collided = false;
+    }
+
+}
+</code></pre>
+
+<p>Thats it!  Now we can throw our ball at a target.  The demo I have is located at <a href="http://jsfiddle.net/cgack/mwsBY/">this jsFiddle</a>.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Book Review: The Tangled Web]]></title>
@@ -351,15 +417,6 @@ Each of these templates could be either a good launching point or reference for 
     <updated>2011-03-15T00:00:00-04:00</updated>
     <id>http://cgack.github.com/blog/2011/03/15/a-beatbox-in-the-sky</id>
     <content type="html"><![CDATA[Recently I&#8217;ve been trying to find less nerdy things to do on Chrome OS.  I don&#8217;t know if its because I&#8217;ve been boring myself when I analyze new cloud based development environments, or if its because I want to become a better advocate for Chrome OS and its purpose for everyone, but I started playing around with some cool applications.<br /><br />I like music.  I like thinking I am a musician (I know cover bands don&#8217;t really count, but almost&#8230;).  So when I saw in the Chrome Web Store a program from <a href="http://www.aviary.com/">Aviary</a> that would allow me to create music right in my fancy home in the cloud, I quickly installed it.  The interface is super intuitive (i.e drag n drop or click a button), so I was off and running.  There is about any sound you would need for a solid beat including drum kits, guitars, voices, even random sounds from around the house.  My first beat tracks were based off of the standard acoustic drum kit, but I soon moved myself to using <a href="http://www.aviary.com/artists/corygack/creations/claps_snaps_organ">claps snaps and an 8 bit organ</a> (&lt;&lt;have a listen if you must). <br /><br />So Aviary is an amazing website that has loads of amazing artist tools, not just music creation.  They have an audio editor where one can edit and mash together tracks, so the next step is to set up a drum track and try to play some music over the top of it in the music studio (or at least sample some of the creations that are out on Aviary&#8217;s site).  The other tools all seem to be likely candidates for common use for my everyday clouding needs like screen capture and image editing.<br /><br /><i><s>Update:  Shortly after I posted the link to my sample sound Aviary&#8217;s creation listening tool crashed.  I checked a couple creations from other folks and those were broken as well.  I&#8217;ll update again when I see the link is working again.</s></i><br /><i><br /></i><br /><i>Update: the link to the creation should work now.</i><div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/7333770831047956364-3150362873073148523?l=go-cloud-go.blogspot.com' alt='' /></div>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[RAD with WaveMaker]]></title>
-    <link href="http://cgack.github.com/blog/2011/03/10/rad-with-wavemaker/"/>
-    <updated>2011-03-10T00:00:00-05:00</updated>
-    <id>http://cgack.github.com/blog/2011/03/10/rad-with-wavemaker</id>
-    <content type="html"><![CDATA[Yesterday <a href="http://www.vmware.com/">VMware</a> <a href="http://blog.springsource.com/2011/03/08/vmware-acquires-wavemaker/">announced</a> they had acquired <a href="http://www.wavemaker.com/">WaveMaker</a>.  I had not explored WaveMaker, but luckily the news exposed this wonderful development tool for me.  WaveMaker is a tool for Rapid Application Development (RAD) that is perhaps the worlds greatest WYSIWYG editor.  Not just WYSIWYG for HTML or page layout, but it can completely eliminate the need for Java coding and with its integrated data structure mappings with <a href="http://www.hibernate.org/">Hibernate</a> it can easily integrate with any enterprise database.  The point is that anyone who is computer capable can write a fully functional web application and maintain it without the need for developer time.  As a bonus, there is integration with the big names in cloud hosting like <a href="http://aws.amazon.com/ec2/">Amazon EC2</a>, <a href="http://www.rackspace.com/">Rackspace</a>, Eucalyptus, and OpSource<div><br /></div><div>I checked out the example videos and was amazed.  I was especially excited because I of course noted there was a <a href="http://cloud.wavemaker.com/">cloud version</a> available.   Of course the site is down for maintenance without any idea as to when service would be restored.  Being an avid user or Chrome OS on my Cr-48 I was extremely bummed.  So I decided to  cheat a little (its still browser based app development, however it required installing software) and I cranked up developer mode on my Cr-48 and entered my Ubuntu Linux boot.  I downloaded WaveMaker and kicked it off.  </div><div><br /></div><div>Amazing.  I created a test project with one of the provided templates and started dragging objects onto my web page.  Styling is available at the click of a button, and wiring up events to buttons exposes so special handling can be added.  I can already grasp the power of this tool and I have not spent a whole hour in it.  I can imagine in the coming days and weeks as I get the chance to get more familiar with it, I will be even more amazed.  I am also excited for when the cloud.wavemaker.com site is operational again when the true power of being able to code an application in the cloud and even deploy to a cloud host like EC2 without leaving the comfort of the browser.</div><div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/7333770831047956364-6275451656771976201?l=go-cloud-go.blogspot.com' alt='' /></div>
 ]]></content>
   </entry>
   
