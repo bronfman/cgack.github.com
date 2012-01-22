@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Remotely Coding - cgack</title>
+  <title>Widget - cgack</title>
   <meta name="author" content="Cory Gackenheimer">
 
   
-  <meta name="description" content="A few weeks ago I wrote a review of some web-based tools to remotely control my PC from my Cr-48.  I have to admit that after spending a real work ...">
+  <meta name="description" content="I have lately been looking to become more involed with open source projects and for starters I have been looking at jQuery UI and jQuery Mobile.  B...">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://cgack.github.com/blog/2011/03/03/remotely-coding/">
+  <link rel="canonical" href="http://cgack.github.com/blog/2012/01/07/widget/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -64,7 +64,7 @@
   
   <header>
     
-      <h1 class="entry-title">Remotely Coding</h1>
+      <h1 class="entry-title">Widget</h1>
     
     
       <p class="meta">
@@ -78,14 +78,124 @@
 
 
 
-<time datetime="2011-03-03T00:00:00-05:00" pubdate  data-updated="true" >Mar 3<span>rd</span>, 2011</time>
+<time datetime="2012-01-07T21:20:00-05:00" pubdate  data-updated="true" >Jan 7<span>th</span>, 2012</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content">A few weeks ago I wrote a review of some web-based tools to remotely control my PC from my Cr-48.  I have to admit that after spending a real work day remotely coding while using my Cr-48 to connect to my PC at work, the win has to go to LogMeIn.  I had thought I could ignore some of the minor issues of TeamViewer because I really enjoyed how simple it seemed, but the character mismatches from what I typed on this end to what resulted on my work PC were not tolerable.  So I think the results should really be that TeamViewer is a simple solution for perhaps remotely helping a relative with an issue on their PC, but for coding remotely, my vote is now entirely for LogMeIn.<div class="blogger-post-footer"><img width='1' height='1' src='' alt='' /></div>
+<div class="entry-content"><p>I have lately been looking to become more involed with open source projects and for starters I have been looking at jQuery UI and jQuery Mobile.  Both are amazing projects and share many of the same characteristics in their code.  This is because in both cases, the majority of the functionality is inherited from the jQuery UI widget factory.  If I&#8217;m going to become involved in this project
+I should understand how this works, so the following is my breakdown of the code as I understand it.</p>
+
+<p>The widget factory looks like the following:</p>
+
+<pre><code>$.widget = function( name, base, prototype ) {
+    var namespace = name.split( "." )[ 0 ],
+        fullName;
+    name = name.split( "." )[ 1 ];
+    fullName = namespace + "-" + name;
+
+    if ( !prototype ) {
+        prototype = base;
+        base = $.Widget;
+    }
+
+    // create selector for plugin
+    $.expr[ ":" ][ fullName ] = function( elem ) {
+        return !!$.data( elem, name );
+    };
+
+    /* OTHER STUFF */
+}
+</code></pre>
+
+<p>I&#8217;ll get to the stuff in a second, but lets see what we&#8217;ve already learned here. First I see that widget can take up to three arguments (name, base, prototype), and example might be something like</p>
+
+<pre><code>$.widget("cg.awesomewidget, "ui.button", { /*...*/})
+</code></pre>
+
+<p>here name or &#8220;cg.awesomewidget&#8221; becomes the namespace and fullname so in my example I have namespaced it to &#8220;cg&#8221; with a fullname of &#8220;cg-awesomewidget&#8221;. I also see that we check if prototype is provided, if it is not we assume that we are not inheriting from a named widget, set the base parameter to prototype and set the base to the main $.Widget base object. Okay that sounds more messy than it is. Lets try to rephrase.  The base is an optional parameter telling the widget factory we want to inherit from a known widget.  In my example above its &#8220;ui.button&#8221;.  If that parameter is not provided it simply pulls from the base $.Widget. So we know that <strong>any</strong> widget will carry the prototype base of
+$.Widget for starters. Now, what about this prototype?  This is the base object literal
+that the widget makes its prototype.  Sweet right?  The next fun fact is that our widget gets its
+very own shiny new custom selector $(&#8220;:cg-awesomewidget&#8221;).</p>
+
+<p>Next the object is constructed via the jQuery.extend() method as follows:</p>
+
+<pre><code>$[ namespace ] = $[ namespace ] || {};
+// create the constructor using $.extend() so we can carry over any
+// static properties stored on the existing constructor (if there is one)
+$[ namespace ][ name ] = $.extend( function( options, element ) {
+    // allow instantiation without "new" keyword
+    if ( !this._createWidget ) {
+        return new $[ namespace ][ name ]( options, element );
+    }
+
+    // allow instantiation without initializing for simple inheritance
+    // must use "new" keyword (the code above always passes args)
+    if ( arguments.length ) {
+        this._createWidget( options, element );
+    }
+}, $[ namespace ][ name ], { version: prototype.version } );
+</code></pre>
+
+<p>here the $[ namespace ][ name ] object is merged together with the prototype.version into the
+existing constructor as described in the comments.  Then the options are passed along to the
+base.  Again this is done via jQuery extend.</p>
+
+<pre><code>var basePrototype = new base();
+// we need to make the options hash a property directly on the new instance
+// otherwise we'll modify the options hash on the prototype that we're
+// inheriting from
+basePrototype.options = $.widget.extend( {}, basePrototype.options );
+</code></pre>
+
+<p>This is followed up with a call to $.each() that checks all the functions of the base and applies
+those to our new widget.</p>
+
+<pre><code>$.each( prototype, function( prop, value ) {
+    if ( $.isFunction( value ) ) {
+        prototype[ prop ] = (function() {
+            var _super = function() {
+                return base.prototype[ prop ].apply( this, arguments );
+            };
+            var _superApply = function( args ) {
+                return base.prototype[ prop ].apply( this, args );
+            };
+            return function() {
+                var __super = this._super,
+                    __superApply = this._superApply,
+                    returnValue;
+
+                this._super = _super;
+                this._superApply = _superApply;
+
+                returnValue = value.apply( this, arguments );
+
+                this._super = __super;
+                this._superApply = __superApply;
+
+                return returnValue;
+            };
+        }());
+    }
+});
+</code></pre>
+
+<p>After all of this its time to put it all together.  The widget prototype is now set via extend where
+we extend our basePrototype (widget) merging in the new widget and prototype. The last thing needed is a call to $.widget.bridge() which creates an instance of the object.</p>
+
+<pre><code>$[ namespace ][ name ].prototype = $.widget.extend( basePrototype, {
+    namespace: namespace,
+    widgetName: name,
+    widgetEventPrefix: name,
+    widgetBaseClass: fullName
+}, prototype );
+
+$.widget.bridge( name, $[ namespace ][ name ] );
+</code></pre>
+
+<p>That concludes our walkthrough of the jQuery UI widget factory.  Fairly amazing when you look at how simple it is to create a widget based on this.  A simple example is a look at jquery.ui.tooltip.js</p>
 </div>
 
 
@@ -106,7 +216,7 @@
 
 
 
-<time datetime="2011-03-03T00:00:00-05:00" pubdate  data-updated="true" >Mar 3<span>rd</span>, 2011</time>
+<time datetime="2012-01-07T21:20:00-05:00" pubdate  data-updated="true" >Jan 7<span>th</span>, 2012</time>
       
 
 
@@ -114,7 +224,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://cgack.github.com/blog/2011/03/03/remotely-coding/" data-via="cgack" data-counturl="http://cgack.github.com/blog/2011/03/03/remotely-coding/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://cgack.github.com/blog/2012/01/07/widget/" data-via="cgack" data-counturl="http://cgack.github.com/blog/2012/01/07/widget/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>

@@ -4,7 +4,7 @@
   <title><![CDATA[cgack]]></title>
   <link href="http://cgack.github.com/atom.xml" rel="self"/>
   <link href="http://cgack.github.com/"/>
-  <updated>2011-12-28T17:25:48-05:00</updated>
+  <updated>2012-01-21T23:03:51-05:00</updated>
   <id>http://cgack.github.com/</id>
   <author>
     <name><![CDATA[Cory Gackenheimer]]></name>
@@ -12,6 +12,125 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Widget]]></title>
+    <link href="http://cgack.github.com/blog/2012/01/07/widget/"/>
+    <updated>2012-01-07T21:20:00-05:00</updated>
+    <id>http://cgack.github.com/blog/2012/01/07/widget</id>
+    <content type="html"><![CDATA[<p>I have lately been looking to become more involed with open source projects and for starters I have been looking at jQuery UI and jQuery Mobile.  Both are amazing projects and share many of the same characteristics in their code.  This is because in both cases, the majority of the functionality is inherited from the jQuery UI widget factory.  If I&#8217;m going to become involved in this project
+I should understand how this works, so the following is my breakdown of the code as I understand it.</p>
+
+<p>The widget factory looks like the following:</p>
+
+<pre><code>$.widget = function( name, base, prototype ) {
+    var namespace = name.split( "." )[ 0 ],
+        fullName;
+    name = name.split( "." )[ 1 ];
+    fullName = namespace + "-" + name;
+
+    if ( !prototype ) {
+        prototype = base;
+        base = $.Widget;
+    }
+
+    // create selector for plugin
+    $.expr[ ":" ][ fullName ] = function( elem ) {
+        return !!$.data( elem, name );
+    };
+
+    /* OTHER STUFF */
+}
+</code></pre>
+
+<p>I&#8217;ll get to the stuff in a second, but lets see what we&#8217;ve already learned here. First I see that widget can take up to three arguments (name, base, prototype), and example might be something like</p>
+
+<pre><code>$.widget("cg.awesomewidget, "ui.button", { /*...*/})
+</code></pre>
+
+<p>here name or &#8220;cg.awesomewidget&#8221; becomes the namespace and fullname so in my example I have namespaced it to &#8220;cg&#8221; with a fullname of &#8220;cg-awesomewidget&#8221;. I also see that we check if prototype is provided, if it is not we assume that we are not inheriting from a named widget, set the base parameter to prototype and set the base to the main $.Widget base object. Okay that sounds more messy than it is. Lets try to rephrase.  The base is an optional parameter telling the widget factory we want to inherit from a known widget.  In my example above its &#8220;ui.button&#8221;.  If that parameter is not provided it simply pulls from the base $.Widget. So we know that <strong>any</strong> widget will carry the prototype base of
+$.Widget for starters. Now, what about this prototype?  This is the base object literal
+that the widget makes its prototype.  Sweet right?  The next fun fact is that our widget gets its
+very own shiny new custom selector $(&#8220;:cg-awesomewidget&#8221;).</p>
+
+<p>Next the object is constructed via the jQuery.extend() method as follows:</p>
+
+<pre><code>$[ namespace ] = $[ namespace ] || {};
+// create the constructor using $.extend() so we can carry over any
+// static properties stored on the existing constructor (if there is one)
+$[ namespace ][ name ] = $.extend( function( options, element ) {
+    // allow instantiation without "new" keyword
+    if ( !this._createWidget ) {
+        return new $[ namespace ][ name ]( options, element );
+    }
+
+    // allow instantiation without initializing for simple inheritance
+    // must use "new" keyword (the code above always passes args)
+    if ( arguments.length ) {
+        this._createWidget( options, element );
+    }
+}, $[ namespace ][ name ], { version: prototype.version } );
+</code></pre>
+
+<p>here the $[ namespace ][ name ] object is merged together with the prototype.version into the
+existing constructor as described in the comments.  Then the options are passed along to the
+base.  Again this is done via jQuery extend.</p>
+
+<pre><code>var basePrototype = new base();
+// we need to make the options hash a property directly on the new instance
+// otherwise we'll modify the options hash on the prototype that we're
+// inheriting from
+basePrototype.options = $.widget.extend( {}, basePrototype.options );
+</code></pre>
+
+<p>This is followed up with a call to $.each() that checks all the functions of the base and applies
+those to our new widget.</p>
+
+<pre><code>$.each( prototype, function( prop, value ) {
+    if ( $.isFunction( value ) ) {
+        prototype[ prop ] = (function() {
+            var _super = function() {
+                return base.prototype[ prop ].apply( this, arguments );
+            };
+            var _superApply = function( args ) {
+                return base.prototype[ prop ].apply( this, args );
+            };
+            return function() {
+                var __super = this._super,
+                    __superApply = this._superApply,
+                    returnValue;
+
+                this._super = _super;
+                this._superApply = _superApply;
+
+                returnValue = value.apply( this, arguments );
+
+                this._super = __super;
+                this._superApply = __superApply;
+
+                return returnValue;
+            };
+        }());
+    }
+});
+</code></pre>
+
+<p>After all of this its time to put it all together.  The widget prototype is now set via extend where
+we extend our basePrototype (widget) merging in the new widget and prototype. The last thing needed is a call to $.widget.bridge() which creates an instance of the object.</p>
+
+<pre><code>$[ namespace ][ name ].prototype = $.widget.extend( basePrototype, {
+    namespace: namespace,
+    widgetName: name,
+    widgetEventPrefix: name,
+    widgetBaseClass: fullName
+}, prototype );
+
+$.widget.bridge( name, $[ namespace ][ name ] );
+</code></pre>
+
+<p>That concludes our walkthrough of the jQuery UI widget factory.  Fairly amazing when you look at how simple it is to create a widget based on this.  A simple example is a look at jquery.ui.tooltip.js</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Collision Detection on Canvas]]></title>
@@ -408,15 +527,6 @@ Each of these templates could be either a good launching point or reference for 
     <updated>2011-03-23T00:00:00-04:00</updated>
     <id>http://cgack.github.com/blog/2011/03/23/javascript-heaven-with-jsfiddle</id>
     <content type="html"><![CDATA[I may have finally found the perfect tool to build and test JavaScript concoctions on the fly (or at least a really cool one). I have been utilizing Kodingen (which is awesome) to code on my Cr48 and then flipping between the JavaScript code, css, html (I know I could put these all in the same document but navigating that is more exhausting to me that toggling windows) and rendered pages to test my script, styles, and html quickly.  This can get a bit cumbersome, and flipping between tabs or workspaces can get old very quickly. <br /><div><br /></div><div>So I was reading through the Chromium blog and I watched a video of Paul Irish, a developer advocate for the Chrome team, discussing some of the cool tools using Google Chrome to <a href="http://www.youtube.com/watch?v=nOEw9iiopwI&amp;feature=player_embedded">develop quicker</a>.  This sparked my interest in <a href="http://paulirish.com/">Paul Irish</a> and the first post I saw on his site had an embedded example from jsFiddle.  This led me to <a href="http://jsfiddle.net/">jsFiddle.net</a>.  Perfect.  Clean.  Awesome. </div><div><br /></div><div>The setup of the editor reminds me of the <a href="http://playground.html5rocks.com/">HTML5 playground</a> at HTML5Rocks, only without the need to switch between views of CSS, HTML, and JavaScript.  In jsFiddle the concurrent views of HTML, CSS, JavaScript, and the current render are all visible because they are each contained in their own iframe.  I decided to try it out with a quick &#8220;hello world&#8221; test which due to the ease of use and another Paul Irish contribution <a href="http://css3please.com/">CSS3Please</a>, I was able to quickly generate this little fiddle:</div><a href="http://jsfiddle.net/corygack/9gw3k/embedded/result/">http://jsfiddle.net/corygack/9gw3k/embedded/result/</a><br /><div><br />Another great feature is the &#8216;TidyUp&#8217; button which will clean up your code&#8217;s indents and spacing, which is super handy if you are like me and you have moved things around or copied text in from outside sources (css3please).  Also included is <a href="http://www.jslint.com/">JSLint</a> which is a great utility that will examine the quality of your code and &#8220;will hurt your feelings&#8221; as it tells the user exactly what is wrong with their JavaScript.  I used jQuery as my JavaScript library of choice, but also included are Mootools, YUI, Prototype, Dojo, Glow, Procession.js, ExtJS, RightJS,  Raphael, and No Library (pure JS)&#8230; so just about any flavor you might care for.   I am sold on jsFiddle and I will likely be using it as my primary tool to fiddle with JavaScript.</div><div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/7333770831047956364-5181953116803374?l=go-cloud-go.blogspot.com' alt='' /></div>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[A Beatbox in the Sky]]></title>
-    <link href="http://cgack.github.com/blog/2011/03/15/a-beatbox-in-the-sky/"/>
-    <updated>2011-03-15T00:00:00-04:00</updated>
-    <id>http://cgack.github.com/blog/2011/03/15/a-beatbox-in-the-sky</id>
-    <content type="html"><![CDATA[Recently I&#8217;ve been trying to find less nerdy things to do on Chrome OS.  I don&#8217;t know if its because I&#8217;ve been boring myself when I analyze new cloud based development environments, or if its because I want to become a better advocate for Chrome OS and its purpose for everyone, but I started playing around with some cool applications.<br /><br />I like music.  I like thinking I am a musician (I know cover bands don&#8217;t really count, but almost&#8230;).  So when I saw in the Chrome Web Store a program from <a href="http://www.aviary.com/">Aviary</a> that would allow me to create music right in my fancy home in the cloud, I quickly installed it.  The interface is super intuitive (i.e drag n drop or click a button), so I was off and running.  There is about any sound you would need for a solid beat including drum kits, guitars, voices, even random sounds from around the house.  My first beat tracks were based off of the standard acoustic drum kit, but I soon moved myself to using <a href="http://www.aviary.com/artists/corygack/creations/claps_snaps_organ">claps snaps and an 8 bit organ</a> (&lt;&lt;have a listen if you must). <br /><br />So Aviary is an amazing website that has loads of amazing artist tools, not just music creation.  They have an audio editor where one can edit and mash together tracks, so the next step is to set up a drum track and try to play some music over the top of it in the music studio (or at least sample some of the creations that are out on Aviary&#8217;s site).  The other tools all seem to be likely candidates for common use for my everyday clouding needs like screen capture and image editing.<br /><br /><i><s>Update:  Shortly after I posted the link to my sample sound Aviary&#8217;s creation listening tool crashed.  I checked a couple creations from other folks and those were broken as well.  I&#8217;ll update again when I see the link is working again.</s></i><br /><i><br /></i><br /><i>Update: the link to the creation should work now.</i><div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/7333770831047956364-3150362873073148523?l=go-cloud-go.blogspot.com' alt='' /></div>
 ]]></content>
   </entry>
   
