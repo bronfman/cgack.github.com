@@ -4,7 +4,7 @@
   <title><![CDATA[cgack]]></title>
   <link href="http://cgack.github.com/atom.xml" rel="self"/>
   <link href="http://cgack.github.com/"/>
-  <updated>2012-01-21T23:03:51-05:00</updated>
+  <updated>2012-01-27T18:35:27-05:00</updated>
   <id>http://cgack.github.com/</id>
   <author>
     <name><![CDATA[Cory Gackenheimer]]></name>
@@ -12,6 +12,186 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[DeviceOrientation Events]]></title>
+    <link href="http://cgack.github.com/blog/2012/01/27/deviceorientation-events/"/>
+    <updated>2012-01-27T18:04:00-05:00</updated>
+    <id>http://cgack.github.com/blog/2012/01/27/deviceorientation-events</id>
+    <content type="html"><![CDATA[<p>The Mozilla Dev Derby is a pretty cool thing.  Developers from around the world can openly add any demo to the site, and if their demo lines up with the prescribed derby for the month, they are automatically entered to win a prize (t-shirt, cool bag, android device).  I decided I would enter again for the January 2012 derby based on Orientation.  I made two demos.</p>
+
+<h3>catch</h3>
+
+<p>The first one called &#8220;Catch&#8221; which you are attempting to catch a randomly generated ball in the shortest amount of time possible. I have personally found it incredibly addicting to get the perfect game, or at least my best attempt at it and I even wrote the source code.  What I learned in developing this app was a couple of things.  One, there isn&#8217;t a ton of documentation on the web about the DeviceOrientationEvent.  Two, its pretty straightforward to detect the orientation and utilize it to move an object.  Here is the basic of my app:</p>
+
+<pre><code> /*orientation stuffs*/
+var initOrientation = function() {
+    var count = 0, gam = 0, bet = 0;
+    if (window.DeviceOrientationEvent) {
+        window.addEventListener("deviceorientation", function(e) {
+            //gamma = left to right
+            //beta = front back
+            //alpha = compass dir
+            count = count + 1;
+            gam += e.gamma;
+            bet += e.beta;
+
+            if (count === 0 || count % 10 === 0) {
+                orientationYo(gam, bet);
+                gam = 0;
+                bet = 0;
+            }
+        }, false);
+    }
+};
+
+//handle orientation
+var orientationYo = function(ltr, ftb) {
+    coor.x = coor.x + ltr;
+    coor.y = coor.y + ftb;
+    if (!gameState.victory &amp;&amp; gameState.playing) {
+        tgt.move(coor);   
+    }
+};
+</code></pre>
+
+<p>so that handles the detection of the orientation event, next I simply added the move call to my target (tgt) which looks like this:</p>
+
+<pre><code>var tgt = {
+    isDrawing: false,
+    collided: false,
+    start: function(coordinates) {
+        this.drawIt(coordinates);
+        this.isDrawing = true;
+    },
+    drawIt: function (coordinates) {
+        ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+        ctx.fillStyle = b2_color;
+        ctx.beginPath();
+        ctx.arc(coordinates.x, coordinates.y, 25, 0, Math.PI * 2, true);
+        ctx.fill();
+    },
+    move: function(coordinates) {
+        if (this.isDrawing) {
+          this.checkBounds(coordinates);
+          this.drawIt(coordinates);
+        }
+    },
+    finish: function(coordinates) {
+        this.isDrawing = false;
+        ctx.lineTo(coordinates.x, coordinates.y);
+        ctx.stroke();
+        ctx.closePath();                
+    },
+    checkBounds: function(coordinates) {
+         if (coordinates.y &gt; bound.y2) {
+            coordinates.y = bound.y2;
+          } else if (coordinates.y &lt; bound.y1) {
+            coordinates.y = bound.y1;
+          } else if (coordinates.x &gt; bound.x2) {
+            coordinates.x = bound.x2;
+          } else if (coordinates.x &lt; bound.x1) {
+            coordinates.x = bound.x1;
+          }
+    }
+};
+</code></pre>
+
+<p>collision detection is handled by my randomly placed bouncing ball, which detects when the target ball moves into its path:</p>
+
+<pre><code>checkObjectCollisions: function() {
+    var imgData = ctx.getImageData(this.position.x + this.velocity.x1, this.position.y + this.velocity.x2, r, r),
+        pix = imgData.data;
+    for (i = 0, n = pix.length; i &lt; n; i += 4) {
+        if (pix[i] !== 0) {
+            this.collided = true;
+            if (Math.abs(this.velocity.x1) &gt; Math.abs(this.velocity.x2)){
+                this.velocity.x1 = -this.velocity.x1 * drag;
+            } else {
+                this.velocity.x2 = -this.velocity.x2 * drag;
+            }
+            break;
+        } else {
+            this.collided = false;
+        }
+    }
+}
+</code></pre>
+
+<p>I am pretty happy with the game, its clean and works nicely.  You can check it out <a href="https://developer.mozilla.org/en-US/demos/detail/catch">here</a></p>
+
+<h3>compass</h3>
+
+<p>The other is a simple web compass where I utilize the DeviceOrientationEvent to get the <a href="https://developer.mozilla.org/en-US/demos/detail/simple-compass">cardinal direction your phone or device is facing</a>.  There are two cool (in my opinion) things that happened here.  One is that to me it seems the device orientation event as defined states that the DeviceOrientationEvent.alpha ranges from 0 to 360 which to me is a 361 degree circle.  The second is that I was able to utilize the offline caching capabilities of the modern web to make the compass available to a device event when not connected to the internet.  This is done in minimal lines of code.  The HTML and JavaScript are as follows:</p>
+
+<pre><code>&lt;!-- This Source Code Form is subject to the terms of the Mozilla Public
+License, v. 2.0. If a copy of the MPL was not distributed with this file,
+You can obtain one at http://mozilla.org/MPL/2.0/.  --&gt;
+
+&lt;!DOCTYPE html&gt;
+&lt;html manifest="compass.appcache"&gt;
+&lt;head&gt;
+&lt;meta charset=utf-8 /&gt;
+&lt;title&gt;Cardinal Direction Compass&lt;/title&gt;
+&lt;style&gt;
+  .pointer {
+    height: 0;
+    width: 0;
+    border-left: 3em solid transparent;
+    border-right: 3em solid transparent;
+    border-bottom: 12em solid black;
+    margin: -10px 0 0 -40px;
+    top: 40%;
+    left: 50%;
+    position: absolute;
+  }
+  .n {
+    top: 20%;
+    left:50%;
+    position:absolute;
+    font:8em Helvetica;
+    margin: 0 0 0 -40px;
+  }
+  &lt;/style&gt;
+  &lt;script src="js/jquery.js"&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div class="n"&gt;N&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;S&lt;/div&gt;
+  &lt;div class="pointer"&gt;&lt;/div&gt;
+&lt;script&gt;
+        $(document).ready(function() {
+
+          var rotate = function (deg) {  
+              $(".n").css({ "-moz-transform": "rotate(0deg)"});
+              $(".n").css({ "-moz-transform": "rotate(" + deg + "deg)"});
+
+              $(".n").css({ "-o-transform": "rotate(0deg)"});
+              $(".n").css({ "-o-transform": "rotate(" + deg + "deg)"});
+
+              $(".n").css({ "-ms-transform": "rotate(0deg)"});
+              $(".n").css({ "-ms-transform": "rotate(" + deg + "deg)"});
+
+              $(".n").css({ "-webkit-transform": "rotate(0deg)"});
+              $(".n").css({ "-webkit-transform": "rotate(" + deg + "deg)"});
+
+              $(".n").css({ "transform": "rotate(0deg)"});
+              $(".n").css({ "transform": "rotate(" + deg + "deg)"});
+          };
+          if (window.DeviceOrientationEvent) {
+            window.addEventListener("deviceorientation", function (e) {
+              rotate(360 - e.alpha);
+            }, false);
+          }
+
+        });
+        &lt;/script&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+
+<p>The final point I&#8217;d like to make is that due to what I thought was minimal documentation, I participated in a Mozilla Doc Sprint last weekend to update the Documentation surrounding the DeviceOrientationEvent. Doing my part in the web development community was both rewarding and a learning experience. I encourage anyone to try it out as well.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Widget]]></title>
@@ -518,15 +698,6 @@ Each of these templates could be either a good launching point or reference for 
     <updated>2011-03-26T00:00:00-04:00</updated>
     <id>http://cgack.github.com/blog/2011/03/26/a-better-web-based-ide</id>
     <content type="html"><![CDATA[After a few days this week without Chrome OS due to <a href="https://groups.google.com/forum/#!msg/chrome-notebook-pilot/biRRijQapdc/FDs_l-29szQJ">a fun error</a> in the Dev build (though its never bad to be able to revert to Ubuntu), I am able to be a Cr-48 nerd again.  The other day one of the three readers of this blog tipped me off on <a href="http://www.akshell.com/">Akshell</a>, another online development environment, which I quickly dove into in order to compare it against some of my other favorites which I have checked out previously <a href="http://go-cloud-go.blogspot.com/2011/02/coding-in-cloud.html">here</a>, <a href="http://go-cloud-go.blogspot.com/2011/02/coding-in-cloud-part-ii.html">here</a>, and <a href="http://go-cloud-go.blogspot.com/2011/03/coding-in-cloud-part.html">here</a>.  By far my favorite has been <a href="http://kodingen.com/">Kodingen</a>, I still go to it to code around and generally geek it up.  This all may change.<br /><br />Akshell is a brilliant development environment that utilizes JavaScript for not only the client-side programming, but also the Server-side.  There are many cool features to how apps are developed and integrated in Akshell, which can be found in <a href="http://www.akshell.com/docs/0.3/">their documentation here</a>.  I have found the environment to be amazing to use utilizing the default &#8220;ak&#8221; library and their Model-View-Controller framework.  For my first test I tried to remake (and improve) the test site I created on Kodingen with Akshell.  I found it was super fast to build with the Akshell environment and enabled me to test and preview just as smoothly as Kodingen though I think the interface with Akshell is much easier to navigate (perhaps because most of the features in Kodingen are still disabled in its current Beta state).  I must admit that I did utilize <a href="http://jsfiddle.net/">jsFiddle</a> to quickly enhance my HTML5 canvas that I had created in Kodingen and then simply copied the JavaScript to Akshell.  So what does a quick Akshell site look like?  <a href="http://gocloudgo.akshell.com/">See mine here.</a><br /><br />One of the promising things about Akshell that I&#8217;ll be getting into soon, is their relational database (PostgreSQL) that is accessible with their &#8220;Simple JavaScript API&#8221;.  From the documentation and the quick test I did with their relation variables I have to agree it is simple to use.  I hope to get some time to get an app going that utilizes this database functionality soon. <br /><br />I don&#8217;t know if I like Akshell an better than Kodingen as far as functionality and features (they both let you code, use a database, and deploy directly within their apps) but I can say that Akshell seems to be a more elegant solution to the online coding environment so I will definitely be using it for my next online coding endeavor.<div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/7333770831047956364-884156941911087161?l=go-cloud-go.blogspot.com' alt='' /></div>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[JavaScript Heaven with jsFiddle]]></title>
-    <link href="http://cgack.github.com/blog/2011/03/23/javascript-heaven-with-jsfiddle/"/>
-    <updated>2011-03-23T00:00:00-04:00</updated>
-    <id>http://cgack.github.com/blog/2011/03/23/javascript-heaven-with-jsfiddle</id>
-    <content type="html"><![CDATA[I may have finally found the perfect tool to build and test JavaScript concoctions on the fly (or at least a really cool one). I have been utilizing Kodingen (which is awesome) to code on my Cr48 and then flipping between the JavaScript code, css, html (I know I could put these all in the same document but navigating that is more exhausting to me that toggling windows) and rendered pages to test my script, styles, and html quickly.  This can get a bit cumbersome, and flipping between tabs or workspaces can get old very quickly. <br /><div><br /></div><div>So I was reading through the Chromium blog and I watched a video of Paul Irish, a developer advocate for the Chrome team, discussing some of the cool tools using Google Chrome to <a href="http://www.youtube.com/watch?v=nOEw9iiopwI&amp;feature=player_embedded">develop quicker</a>.  This sparked my interest in <a href="http://paulirish.com/">Paul Irish</a> and the first post I saw on his site had an embedded example from jsFiddle.  This led me to <a href="http://jsfiddle.net/">jsFiddle.net</a>.  Perfect.  Clean.  Awesome. </div><div><br /></div><div>The setup of the editor reminds me of the <a href="http://playground.html5rocks.com/">HTML5 playground</a> at HTML5Rocks, only without the need to switch between views of CSS, HTML, and JavaScript.  In jsFiddle the concurrent views of HTML, CSS, JavaScript, and the current render are all visible because they are each contained in their own iframe.  I decided to try it out with a quick &#8220;hello world&#8221; test which due to the ease of use and another Paul Irish contribution <a href="http://css3please.com/">CSS3Please</a>, I was able to quickly generate this little fiddle:</div><a href="http://jsfiddle.net/corygack/9gw3k/embedded/result/">http://jsfiddle.net/corygack/9gw3k/embedded/result/</a><br /><div><br />Another great feature is the &#8216;TidyUp&#8217; button which will clean up your code&#8217;s indents and spacing, which is super handy if you are like me and you have moved things around or copied text in from outside sources (css3please).  Also included is <a href="http://www.jslint.com/">JSLint</a> which is a great utility that will examine the quality of your code and &#8220;will hurt your feelings&#8221; as it tells the user exactly what is wrong with their JavaScript.  I used jQuery as my JavaScript library of choice, but also included are Mootools, YUI, Prototype, Dojo, Glow, Procession.js, ExtJS, RightJS,  Raphael, and No Library (pure JS)&#8230; so just about any flavor you might care for.   I am sold on jsFiddle and I will likely be using it as my primary tool to fiddle with JavaScript.</div><div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/7333770831047956364-5181953116803374?l=go-cloud-go.blogspot.com' alt='' /></div>
 ]]></content>
   </entry>
   

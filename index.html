@@ -9,7 +9,7 @@
   <meta name="author" content="Cory Gackenheimer">
 
   
-  <meta name="description" content="I have lately been looking to become more involed with open source projects and for starters I have been looking at jQuery UI and jQuery Mobile.  B...">
+  <meta name="description" content="The Mozilla Dev Derby is a pretty cool thing.  Developers from around the world can openly add any demo to the site, and if their demo lines up wit...">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -61,6 +61,211 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/01/27/deviceorientation-events/">DeviceOrientation Events</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+  
+
+
+
+<time datetime="2012-01-27T18:04:00-05:00" pubdate  data-updated="true" >Jan 27<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>The Mozilla Dev Derby is a pretty cool thing.  Developers from around the world can openly add any demo to the site, and if their demo lines up with the prescribed derby for the month, they are automatically entered to win a prize (t-shirt, cool bag, android device).  I decided I would enter again for the January 2012 derby based on Orientation.  I made two demos.</p>
+
+<h3>catch</h3>
+
+<p>The first one called &#8220;Catch&#8221; which you are attempting to catch a randomly generated ball in the shortest amount of time possible. I have personally found it incredibly addicting to get the perfect game, or at least my best attempt at it and I even wrote the source code.  What I learned in developing this app was a couple of things.  One, there isn&#8217;t a ton of documentation on the web about the DeviceOrientationEvent.  Two, its pretty straightforward to detect the orientation and utilize it to move an object.  Here is the basic of my app:</p>
+
+<pre><code> /*orientation stuffs*/
+var initOrientation = function() {
+    var count = 0, gam = 0, bet = 0;
+    if (window.DeviceOrientationEvent) {
+        window.addEventListener("deviceorientation", function(e) {
+            //gamma = left to right
+            //beta = front back
+            //alpha = compass dir
+            count = count + 1;
+            gam += e.gamma;
+            bet += e.beta;
+
+            if (count === 0 || count % 10 === 0) {
+                orientationYo(gam, bet);
+                gam = 0;
+                bet = 0;
+            }
+        }, false);
+    }
+};
+
+//handle orientation
+var orientationYo = function(ltr, ftb) {
+    coor.x = coor.x + ltr;
+    coor.y = coor.y + ftb;
+    if (!gameState.victory &amp;&amp; gameState.playing) {
+        tgt.move(coor);   
+    }
+};
+</code></pre>
+
+<p>so that handles the detection of the orientation event, next I simply added the move call to my target (tgt) which looks like this:</p>
+
+<pre><code>var tgt = {
+    isDrawing: false,
+    collided: false,
+    start: function(coordinates) {
+        this.drawIt(coordinates);
+        this.isDrawing = true;
+    },
+    drawIt: function (coordinates) {
+        ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+        ctx.fillStyle = b2_color;
+        ctx.beginPath();
+        ctx.arc(coordinates.x, coordinates.y, 25, 0, Math.PI * 2, true);
+        ctx.fill();
+    },
+    move: function(coordinates) {
+        if (this.isDrawing) {
+          this.checkBounds(coordinates);
+          this.drawIt(coordinates);
+        }
+    },
+    finish: function(coordinates) {
+        this.isDrawing = false;
+        ctx.lineTo(coordinates.x, coordinates.y);
+        ctx.stroke();
+        ctx.closePath();                
+    },
+    checkBounds: function(coordinates) {
+         if (coordinates.y &gt; bound.y2) {
+            coordinates.y = bound.y2;
+          } else if (coordinates.y &lt; bound.y1) {
+            coordinates.y = bound.y1;
+          } else if (coordinates.x &gt; bound.x2) {
+            coordinates.x = bound.x2;
+          } else if (coordinates.x &lt; bound.x1) {
+            coordinates.x = bound.x1;
+          }
+    }
+};
+</code></pre>
+
+<p>collision detection is handled by my randomly placed bouncing ball, which detects when the target ball moves into its path:</p>
+
+<pre><code>checkObjectCollisions: function() {
+    var imgData = ctx.getImageData(this.position.x + this.velocity.x1, this.position.y + this.velocity.x2, r, r),
+        pix = imgData.data;
+    for (i = 0, n = pix.length; i &lt; n; i += 4) {
+        if (pix[i] !== 0) {
+            this.collided = true;
+            if (Math.abs(this.velocity.x1) &gt; Math.abs(this.velocity.x2)){
+                this.velocity.x1 = -this.velocity.x1 * drag;
+            } else {
+                this.velocity.x2 = -this.velocity.x2 * drag;
+            }
+            break;
+        } else {
+            this.collided = false;
+        }
+    }
+}
+</code></pre>
+
+<p>I am pretty happy with the game, its clean and works nicely.  You can check it out <a href="https://developer.mozilla.org/en-US/demos/detail/catch">here</a></p>
+
+<h3>compass</h3>
+
+<p>The other is a simple web compass where I utilize the DeviceOrientationEvent to get the <a href="https://developer.mozilla.org/en-US/demos/detail/simple-compass">cardinal direction your phone or device is facing</a>.  There are two cool (in my opinion) things that happened here.  One is that to me it seems the device orientation event as defined states that the DeviceOrientationEvent.alpha ranges from 0 to 360 which to me is a 361 degree circle.  The second is that I was able to utilize the offline caching capabilities of the modern web to make the compass available to a device event when not connected to the internet.  This is done in minimal lines of code.  The HTML and JavaScript are as follows:</p>
+
+<pre><code>&lt;!-- This Source Code Form is subject to the terms of the Mozilla Public
+License, v. 2.0. If a copy of the MPL was not distributed with this file,
+You can obtain one at http://mozilla.org/MPL/2.0/.  --&gt;
+
+&lt;!DOCTYPE html&gt;
+&lt;html manifest="compass.appcache"&gt;
+&lt;head&gt;
+&lt;meta charset=utf-8 /&gt;
+&lt;title&gt;Cardinal Direction Compass&lt;/title&gt;
+&lt;style&gt;
+  .pointer {
+    height: 0;
+    width: 0;
+    border-left: 3em solid transparent;
+    border-right: 3em solid transparent;
+    border-bottom: 12em solid black;
+    margin: -10px 0 0 -40px;
+    top: 40%;
+    left: 50%;
+    position: absolute;
+  }
+  .n {
+    top: 20%;
+    left:50%;
+    position:absolute;
+    font:8em Helvetica;
+    margin: 0 0 0 -40px;
+  }
+  &lt;/style&gt;
+  &lt;script src="js/jquery.js"&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div class="n"&gt;N&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;S&lt;/div&gt;
+  &lt;div class="pointer"&gt;&lt;/div&gt;
+&lt;script&gt;
+        $(document).ready(function() {
+
+          var rotate = function (deg) {  
+              $(".n").css({ "-moz-transform": "rotate(0deg)"});
+              $(".n").css({ "-moz-transform": "rotate(" + deg + "deg)"});
+
+              $(".n").css({ "-o-transform": "rotate(0deg)"});
+              $(".n").css({ "-o-transform": "rotate(" + deg + "deg)"});
+
+              $(".n").css({ "-ms-transform": "rotate(0deg)"});
+              $(".n").css({ "-ms-transform": "rotate(" + deg + "deg)"});
+
+              $(".n").css({ "-webkit-transform": "rotate(0deg)"});
+              $(".n").css({ "-webkit-transform": "rotate(" + deg + "deg)"});
+
+              $(".n").css({ "transform": "rotate(0deg)"});
+              $(".n").css({ "transform": "rotate(" + deg + "deg)"});
+          };
+          if (window.DeviceOrientationEvent) {
+            window.addEventListener("deviceorientation", function (e) {
+              rotate(360 - e.alpha);
+            }, false);
+          }
+
+        });
+        &lt;/script&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+
+<p>The final point I&#8217;d like to make is that due to what I thought was minimal documentation, I participated in a Mozilla Doc Sprint last weekend to update the Documentation surrounding the DeviceOrientationEvent. Doing my part in the web development community was both rewarding and a learning experience. I encourage anyone to try it out as well.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -705,40 +910,6 @@ Each of these templates could be either a good launching point or reference for 
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/06/07/i-cloud/">I Cloud</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-  
-
-
-
-<time datetime="2011-06-07T00:00:00-04:00" pubdate  data-updated="true" >Jun 7<span>th</span>, 2011</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content">Earlier today Apple announced a revolutionary set of services called <a href="http://www.apple.com/icloud/">iCloud</a>.  I must say it sounds incredible to be able to edit a <a href="http://docs.google.com/">document</a>, sync <a href="http://mail.google.com/">contacts</a>, view my <a href="http://www.google.com/calendar">calendar</a>, listen to <a href="http://music.google.com/">music</a>, read my electronic <a href="http://books.google.com/">books</a>, view my <a href="http://www.google.com/picasa">photos</a>, and access my <a href="http://mail.google.com/">email</a> from any internet enabled device. , It does seem like a great advantage to not have to upload to a cloud music service like the Amazon Cloud Player or Google Music, which iCloud offers via iTunes &#8220;scan and match&#8221; and I&#8217;m certain it will be another service I try in my attempt to find the best cloud experience.   I&#8217;ve been happily clouding for some time now, and hope that Apple does good things in the space.  Happy clouding.<div class="blogger-post-footer"><img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/7333770831047956364-747140899803548158?l=go-cloud-go.blogspot.com' alt='' /></div>
-</div>
-  
-  
-
-
-    </article>
-  
   <nav class="pagination">
     <div>
       
@@ -803,6 +974,10 @@ Each of these templates could be either a good launching point or reference for 
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2012/01/27/deviceorientation-events/">DeviceOrientation Events</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2012/01/07/widget/">Widget</a>
       </li>
     
@@ -816,10 +991,6 @@ Each of these templates could be either a good launching point or reference for 
     
       <li class="post">
         <a href="/blog/2011/12/19/canvas/">Canvas, History, LocalStorage and More</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2011/11/08/moving-to-octopress/">Moving to Octopress</a>
       </li>
     
   </ul>
